@@ -7,75 +7,86 @@
 @inject NavigationManager Nav
 @inject GameEngine Engine
 
-<div class="summary-page container py-4">
-    <h1>Summary</h1>
+<div class="game-wrapper">
+    <img src="images/start-bg.jpg" class="image-bg" alt="Summary Background" />
 
-    @if (State.ChoiceHistory == null || !State.ChoiceHistory.Any())
-    {
-        <p>No actions recorded.</p>
-    }
-    else
-    {
-        @if (!string.IsNullOrEmpty(_filterLevel))
-        {
-            <div class="mb-3 d-flex align-items-center">
-                <strong class="me-3">Showing:</strong>
-                <span class="badge bg-secondary me-auto">@_filterLevel</span>
-                <button class="btn btn-sm btn-outline-primary" @onclick="ToggleShowAll">
-                    @(_showAllLevels ? "Show only this level" : "Show all levels")
-                </button>
-            </div>
-        }
+    <div class="content-box">
+        <h1 class="title">Summary</h1>
+        <div class="divider"></div>
 
-        var groups = GetGroupedSummaries();
-        if (!groups.Any())
+        @if (State.ChoiceHistory == null || !State.ChoiceHistory.Any())
         {
-            <p>No actions recorded for this level.</p>
+            <p class="scenario-text">No actions recorded.</p>
         }
         else
         {
-            @foreach (var levelGroup in groups)
+            @if (!string.IsNullOrEmpty(_filterLevel))
             {
-                <div class="level-summary mb-4">
-                    <h3 class="level-name">@levelGroup.Key</h3>
-                    <ul class="list-unstyled ms-3">
-                        @foreach (var entry in levelGroup)
-                        {
-                            <li class="mb-1">• @entry.Text</li>
-                        }
-                    </ul>
+                <div class="mb-3 d-flex align-items-center justify-content-center gap-3">
+                    <button class="btn-safezone" style="font-size: 1rem;" @onclick="ToggleShowAll">
+                        [ @(_showAllLevels ? "Show only this level" : "Show all levels") ]
+                    </button>
                 </div>
             }
-        }
-    }
 
-    <div class="summary-actions mt-3">
-        @if (!string.IsNullOrEmpty(_nextLevelQuery))
-        {
-            <button class="btn btn-primary me-2" @onclick="ContinueToNextLevel">Continue to next level</button>
+            <div class="summary-list">
+                @{
+                    var groups = GetGroupedSummaries();
+                }
+                @if (!groups.Any())
+                {
+                    <p>No actions recorded for this level.</p>
+                }
+                else
+                {
+                    @foreach (var levelGroup in groups)
+                    {
+                        <div class="level-summary-group">
+                            <h3 class="level-title">@levelGroup.Key</h3>
+                            <ul class="list-unstyled">
+                                @foreach (var entry in levelGroup)
+                                {
+                                    <li class="mb-1">• @entry.Text</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                }
+            </div>
         }
-        <button class="btn btn-secondary me-2" @onclick="ContinueFromCheckpoint">Continue from last checkpoint</button>
-        <button class="btn btn-link text-danger" @onclick="ShowConfirm">Back to menu</button>
+
+        <div class="divider" style="width: 100%; opacity: 0.3;"></div>
+
+        <div class="summary-actions d-flex flex-wrap justify-content-center gap-2">
+            @if (!string.IsNullOrEmpty(_nextLevelQuery))
+            {
+                <button class="btn-safezone" @onclick="ContinueToNextLevel">[ Continue to next level ]</button>
+            }
+            <button class="btn-safezone btn-checkpoint" @onclick="ContinueFromCheckpoint">[ Continue from last checkpoint ]</button>
+            <button class="btn-safezone btn-danger" @onclick="ShowConfirm">[ Back to menu ]</button>
+        </div>
     </div>
 </div>
 
 @if (_showConfirm)
 {
     <div class="confirm-backdrop" @onclick="CancelConfirm">
-        <div class="confirm-modal" @onclick:stopPropagation>
-            <h4 class="mb-3">Clear progress?</h4>
+        <div class="content-box modal-danger" @onclick:stopPropagation>
+            <h4 class="mb-3" style="color: #ff4444; font-size: 2rem;">Clear progress?</h4>
             <p class="mb-4">This will reset the current game progress and checkpoints. Are you sure you want to continue?</p>
-            <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-outline-secondary" @onclick="CancelConfirm">Cancel</button>
-                <button class="btn btn-danger" @onclick="ConfirmBackToMenu">Clear &amp; Menu</button>
+            <div class="d-flex justify-content-center gap-3">
+                <button class="btn-safezone" @onclick="CancelConfirm">[ Cancel ]</button>
+                <button class="btn-safezone btn-danger" style="background: #ff4444; color: #000;" @onclick="ConfirmBackToMenu">
+                    [ Clear & Menu ]
+                </button>
             </div>
         </div>
     </div>
 }
 
 @code {
-    private string? _nextLevelQuery; // upcoming level from query (used for Continue button)
-    private string? _filterLevel;    // the level we show summaries for (completed level)
+    private string? _nextLevelQuery;
+    private string? _filterLevel;
     private string? _nextNode;
     private bool _showConfirm;
     private bool _showAllLevels;
@@ -105,10 +116,6 @@
                 _nextNode = nn;
         }
 
-        // Default filter behavior:
-        // - If we were navigated here before loading the NEXT level (nextLevel present),
-        //   show summaries for the level the player just completed (use last recorded entry or State.CurrentLevelName).
-        // - Otherwise, default to the most recently recorded level.
         if (!string.IsNullOrEmpty(_nextLevelQuery))
         {
             if (State.ChoiceHistory != null && State.ChoiceHistory.Any())
@@ -137,10 +144,7 @@
         return State.ChoiceHistory.GroupBy(e => e.LevelName);
     }
 
-    private void ToggleShowAll()
-    {
-        _showAllLevels = !_showAllLevels;
-    }
+    private void ToggleShowAll() => _showAllLevels = !_showAllLevels;
 
     private async Task ContinueToNextLevel()
     {
@@ -163,15 +167,8 @@
         Nav.NavigateTo("/play");
     }
 
-    private void ShowConfirm()
-    {
-        _showConfirm = true;
-    }
-
-    private void CancelConfirm()
-    {
-        _showConfirm = false;
-    }
+    private void ShowConfirm() => _showConfirm = true;
+    private void CancelConfirm() => _showConfirm = false;
 
     private void ConfirmBackToMenu()
     {
