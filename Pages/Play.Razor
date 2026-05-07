@@ -1,12 +1,13 @@
 ﻿@page "/play"
 @using SafeZone.Models
 @using SafeZone.Logic
-@inject HttpClient Http
+@inject GameEngine Engine
 @inject GameStateService State
+@inject NavigationManager Nav
 @implements IDisposable
 
 <div class="game-container">
-    @if (currentScenario == null)
+    @if (Engine.CurrentScenario == null)
     {
         <div class="loading-box">
             <p>Laddar berättelsen...</p>
@@ -15,11 +16,11 @@
     else
     {
         <div class="scenario-box">
-            <h1>@currentLevel?.LevelName</h1>
-            <p class="scenario-text">@currentScenario.Text</p>
+            <h1>@Engine.LoadedLevel?.LevelName</h1>
+            <p class="scenario-text">@Engine.CurrentScenario.Text</p>
 
             <div class="choices-list">
-                @foreach (var choice in currentScenario.Choices)
+                @foreach (var choice in Engine.CurrentScenario.Choices)
                 {
                     <button class="choice-button" @onclick="() => OnChoiceSelected(choice)">
                         @choice.ButtonText
@@ -31,46 +32,51 @@
 </div>
 
 @code {
-    private GameLevel? currentLevel;
-    private GameScenario? currentScenario;
-
     protected override async Task OnInitializedAsync()
     {
         State.OnChange += StateHasChanged;
 
         try
         {
-            // Load the level file from wwwroot/game-data/level1.json
-            currentLevel = await Http.GetFromJsonAsync<GameLevel>("game-data/level1.json");
+            var levelToLoad = string.IsNullOrEmpty(State.CurrentLevelName) ? "level1" : State.CurrentLevelName;
+            await Engine.LoadLevel(levelToLoad);
 
-            if (currentLevel != null)
+            if (!string.IsNullOrEmpty(State.CurrentNodeId))
             {
-                // Ensure state has a valid start node (optional)
-                if (string.IsNullOrEmpty(State.CurrentNodeId))
-                {
-                    State.CurrentNodeId = currentLevel.StartNodeId;
-                }
-                UpdateActiveScenario();
+                State.SetCurrentNode(State.CurrentNodeId);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading level: {ex.Message}");
+            Console.WriteLine($"Ett fel uppstod vid laddning: {ex.Message}");
         }
     }
 
-    private void OnChoiceSelected(GameChoice choice)
+    private async Task OnChoiceSelected(GameChoice choice)
     {
-        State.HandleChoice(choice);
-        UpdateActiveScenario();
-    }
-
-    private void UpdateActiveScenario()
-    {
-        if (currentLevel != null)
+        // If this choice jumps to another level, record summary and show summary page first
+        if (!string.IsNullOrEmpty(choice.NextLevel))
         {
-            currentScenario = currentLevel.Scenarios
-                .FirstOrDefault(s => s.Id == State.CurrentNodeId);
+            if (!string.IsNullOrEmpty(choice.SummaryText))
+                State.ChoiceHistory.Add(choice.SummaryText);
+
+            var qNextLevel = Uri.EscapeDataString(choice.NextLevel);
+            var qNextNode = Uri.EscapeDataString(choice.NextNodeId ?? string.Empty);
+            Nav.NavigateTo($"/summary?nextLevel={qNextLevel}&nextNode={qNextNode}");
+            return;
+        }
+
+        // otherwise handle same-level navigation via engine
+        await Engine.SelectChoice(choice);
+
+        var ended = Engine.CurrentScenario == null
+                    || Engine.CurrentScenario.IsTerminal
+                    || (!string.IsNullOrEmpty(choice.NextNodeId) && choice.NextNodeId.StartsWith("end_"));
+
+        if (ended)
+        {
+            Nav.NavigateTo("/summary");
+            return;
         }
     }
 
