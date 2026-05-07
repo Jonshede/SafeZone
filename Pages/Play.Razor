@@ -1,5 +1,59 @@
-﻿<h3>Component</h3>
+﻿@page "/play"
+@using SafeZone.Models
+@using SafeZone.Logic
+@inject GameEngine Engine
+@inject GameStateService State
+@implements IDisposable
+
+<div class="container mt-5">
+    @if (Engine.IsLoading)
+    {
+        <div class="text-center mt-5">
+            <div class="spinner-border text-info" role="status"></div>
+            <p class="mt-2 italic">Loading tactical data...</p>
+        </div>
+    }
+    else if (Engine.CurrentScenario != null)
+    {
+        <div class="card shadow-lg p-4 bg-dark text-light border-secondary">
+            <div class="card-body">
+                <p class="fs-4 mb-4">@Engine.CurrentScenario.Text</p>
+
+                <div class="d-grid gap-3">
+                    @foreach (var gameChoice in Engine.CurrentScenario.Choices)
+                    {
+                        <button class="btn btn-outline-info btn-lg text-start"
+                                @onclick="() => Engine.SelectChoice(gameChoice)">
+                            @gameChoice.ButtonText
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between align-items-center">
+            <button class="btn btn-sm btn-outline-warning" @onclick="State.ResetToCheckpoint">
+                Load Last Checkpoint
+            </button>
+            <span class="text-muted small">Location: @State.CurrentNodeId</span>
+        </div>
+    }
+</div>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Vi prenumererar på OnChange så att sidan ritas om när ett val görs
+        State.OnChange += StateHasChanged;
 
+        // Här laddar vi in din engelska JSON-fil
+        // Se till att filen heter "the_city.json" i wwwroot/data/
+        await Engine.LoadLevel("the_city");
+    }
+
+    public void Dispose()
+    {
+        // Viktigt att ta bort prenumerationen när sidan stängs ner för att undvika minnesläckor
+        State.OnChange -= StateHasChanged;
+    }
 }
