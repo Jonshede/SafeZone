@@ -2,7 +2,6 @@
 @using SafeZone.Models
 @using SafeZone.Logic
 @inject HttpClient Http
-@inject GameEngine Engine
 @inject GameStateService State
 @implements IDisposable
 
@@ -41,17 +40,22 @@
 
         try
         {
-            // Vi hämtar hela objektet som matchar strukturen i level1.json
+            // Load the level file from wwwroot/game-data/level1.json
             currentLevel = await Http.GetFromJsonAsync<GameLevel>("game-data/level1.json");
 
             if (currentLevel != null)
             {
+                // Ensure state has a valid start node (optional)
+                if (string.IsNullOrEmpty(State.CurrentNodeId))
+                {
+                    State.CurrentNodeId = currentLevel.StartNodeId;
+                }
                 UpdateActiveScenario();
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ett fel uppstod vid laddning: {ex.Message}");
+            Console.WriteLine($"Error loading level: {ex.Message}");
         }
     }
 
@@ -65,7 +69,6 @@
     {
         if (currentLevel != null)
         {
-            // Vi letar i listan "Scenario" efter det ID som GameStateService säger att vi är på
             currentScenario = currentLevel.Scenarios
                 .FirstOrDefault(s => s.Id == State.CurrentNodeId);
         }

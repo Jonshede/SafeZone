@@ -3,7 +3,7 @@
 public class GameStateService
 {
     // --- Aktiv speldata (det som ändras hela tiden) ---
-    public string CurrentNodeId { get; set; } = "Start";
+    public string CurrentNodeId { get; set; } = "intro";
     public List<string> ChoiceHistory { get; private set; } = new List<string>();
 
     // --- Checkpoint-data (det som sparats) ---
