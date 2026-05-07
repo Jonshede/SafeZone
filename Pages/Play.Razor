@@ -84,7 +84,7 @@
         if (!string.IsNullOrEmpty(choice.NextLevel))
         {
             if (!string.IsNullOrEmpty(choice.SummaryText))
-                State.ChoiceHistory.Add(choice.SummaryText);
+                State.AddChoiceSummary(choice.SummaryText); // <--- minimal change
 
             var qNextLevel = Uri.EscapeDataString(choice.NextLevel);
             var qNextNode = Uri.EscapeDataString(choice.NextNodeId ?? string.Empty);
