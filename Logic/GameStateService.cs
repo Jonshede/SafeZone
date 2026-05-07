@@ -1,4 +1,6 @@
-﻿using SafeZone.Models;
+﻿using System;
+using System.Collections.Generic;
+using SafeZone.Models;
 
 namespace SafeZone.Logic
 {
@@ -7,20 +9,30 @@ namespace SafeZone.Logic
         // --- Aktiv speldata (det som ändras hela tiden) ---
         public string CurrentLevelName { get; set; } = "level1";
         public string CurrentNodeId { get; set; } = "intro";
-        public List<string> ChoiceHistory { get; private set; } = new();
+
+        // Now stores level + summary text so we can group by level
+        public List<GameSummaryEntry> ChoiceHistory { get; private set; } = new();
 
         // --- Checkpoint-data (det som sparats) ---
         private string _checkpointLevelName = "level1";
         private string _checkpointNodeId = "Start";
-        private List<string> _checkpointHistory = new();
+        private List<GameSummaryEntry> _checkpointHistory = new();
 
         public event Action? OnChange;
 
+        // Helper to add a summary entry tied to the current level
+        public void AddChoiceSummary(string? summaryText)
+        {
+            if (string.IsNullOrEmpty(summaryText))
+                return;
+
+            ChoiceHistory.Add(new GameSummaryEntry(CurrentLevelName ?? string.Empty, summaryText));
+            NotifyStateChanged();
+        }
+
         public void HandleChoice(GameChoice gameChoice)
         {
-            if (!string.IsNullOrEmpty(gameChoice.SummaryText))
-                ChoiceHistory.Add(gameChoice.SummaryText);
-
+            AddChoiceSummary(gameChoice.SummaryText);
             CurrentNodeId = gameChoice.NextNodeId;
             NotifyStateChanged();
         }
@@ -37,7 +49,7 @@ namespace SafeZone.Logic
         {
             _checkpointLevelName = CurrentLevelName;
             _checkpointNodeId = CurrentNodeId;
-            _checkpointHistory = new List<string>(ChoiceHistory);
+            _checkpointHistory = new List<GameSummaryEntry>(ChoiceHistory);
             NotifyStateChanged();
         }
 
@@ -46,7 +58,7 @@ namespace SafeZone.Logic
         {
             CurrentLevelName = _checkpointLevelName;
             CurrentNodeId = _checkpointNodeId;
-            ChoiceHistory = new List<string>(_checkpointHistory);
+            ChoiceHistory = new List<GameSummaryEntry>(_checkpointHistory);
             NotifyStateChanged();
         }
 

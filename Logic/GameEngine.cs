@@ -1,4 +1,8 @@
-﻿using System.Net.Http.Json;
+﻿using System;
+using System.Net.Http;
+using System;
+using System.Net.Http;
+using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using SafeZone.Models;
 using System.Linq;
@@ -68,9 +72,9 @@ namespace SafeZone.Logic
         // Now async so we can load another level as part of a choice
         public async Task SelectChoice(GameChoice gameChoice)
         {
-            // Record summary text
+            // Record summary text with level
             if (!string.IsNullOrEmpty(gameChoice.SummaryText))
-                _state.ChoiceHistory.Add(gameChoice.SummaryText);
+                _state.AddChoiceSummary(gameChoice.SummaryText);
 
             // If the choice specifies a level, load it
             if (!string.IsNullOrEmpty(gameChoice.NextLevel))
