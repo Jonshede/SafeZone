@@ -1,0 +1,79 @@
+@page "/summary"
+@using SafeZone.Logic
+@using SafeZone.Models
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using System.Web
+@inject GameStateService State
+@inject NavigationManager Nav
+@inject GameEngine Engine
+
+<div class="summary-page container py-4">
+    <h1>Summary</h1>
+
+    @if (State.ChoiceHistory == null || !State.ChoiceHistory.Any())
+    {
+        <p>No actions recorded.</p>
+    }
+    else
+    {
+        <p>Actions chosen so far (all levels):</p>
+        <ol>
+            @foreach (var entry in State.ChoiceHistory)
+            {
+                <li>@entry</li>
+            }
+        </ol>
+    }
+
+    <div class="summary-actions mt-3">
+        @if (!string.IsNullOrEmpty(_nextLevel))
+        {
+            <button class="btn btn-primary me-2" @onclick="ContinueToNextLevel">Continue to next level</button>
+        }
+        <button class="btn btn-secondary me-2" @onclick="ContinueFromCheckpoint">Continue from last checkpoint</button>
+        <button class="btn btn-link" @onclick="BackToMenu">Back to menu</button>
+    </div>
+</div>
+
+@code {
+    private string? _nextLevel;
+    private string? _nextNode;
+
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = HttpUtility.ParseQueryString(uri.Query);
+
+        if (query["nextLevel"] != null)
+            _nextLevel = query["nextLevel"];
+        if (query["nextNode"] != null)
+            _nextNode = query["nextNode"];
+    }
+
+    private async Task ContinueToNextLevel()
+    {
+        if (string.IsNullOrEmpty(_nextLevel))
+        {
+            Nav.NavigateTo("/play");
+            return;
+        }
+
+        // Load the next level and set node if provided
+        await Engine.LoadLevel(_nextLevel);
+        if (!string.IsNullOrEmpty(_nextNode))
+            State.SetCurrentNode(_nextNode);
+
+        Nav.NavigateTo("/play");
+    }
+
+    private void ContinueFromCheckpoint()
+    {
+        State.ResetToCheckpoint();
+        Nav.NavigateTo("/play");
+    }
+
+    private void BackToMenu()
+    {
+        Nav.NavigateTo("/");
+    }
+}

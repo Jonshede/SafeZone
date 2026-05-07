@@ -1,3 +1,39 @@
 {
-
+    "LevelName": "The City",
+    "StartNodeId": "intro",
+    "Scenarios": [
+        {
+            "Id": "intro",
+            "Text": "The air raid sirens are wailing across the city. You are standing in your hallway. What do you prioritize taking with you?",
+            "IsCheckpoint": true,
+            "Choices": [
+                {
+                    "ButtonText": "Cars and shit",
+                    "NextNodeId": "the_street",
+                    "SummaryText": "You prioritized survival equipment."
+                },
+                {
+                    "ButtonText": "People and army",
+                    "NextNodeId": "the_street",
+                    "SummaryText": "You chose to save what matters to the heart."
+                }
+            ]
+        },
+        {
+            "Id": "the_street",
+            "Text": "Confusion reigns in the street. A neighbor is calling for help, but you see the last bus toward the shelter is about to leave.",
+            "Choices": [
+                {
+                    "ButtonText": "Help the neighbor",
+                    "NextNodeId": "end_hero",
+                    "SummaryText": "You stopped to help a fellow human in need."
+                },
+                {
+                    "ButtonText": "Run for the bus",
+                    "NextNodeId": "end_shelter",
+                    "SummaryText": "You prioritized your own immediate safety."
+                }
+            ]
+        }
+    ]
 }

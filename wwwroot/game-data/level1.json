@@ -24,14 +24,17 @@
       "Text": "Confusion reigns in the street. A neighbor is calling for help, but you see the last bus toward the shelter is about to leave.",
       "Choices": [
         {
-          "ButtonText": "Help the neighbor",
-          "NextNodeId": "end_hero",
-          "SummaryText": "You stopped to help a fellow human in need."
+            "ButtonText": "Go to the city (next level)",
+            "NextLevel": "level2",
+            "NextNodeId": "intro",
+            "SummaryText": "You left the first area for the city."
         },
         {
-          "ButtonText": "Run for the bus",
-          "NextNodeId": "end_shelter",
-          "SummaryText": "You prioritized your own immediate safety."
+            "ButtonText": "Go to the city (next level)",
+            "NextLevel": "level2",
+            "NextNodeId": "intro",
+            "SummaryText": "You left the first area for the city."
+
         }
       ]
     }
