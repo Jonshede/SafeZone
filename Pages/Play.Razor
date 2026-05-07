@@ -1,8 +1,9 @@
 ﻿@page "/play"
 @using SafeZone.Models
 @using SafeZone.Logic
-@inject HttpClient Http
+@inject GameEngine Engine
 @inject GameStateService State
+@inject NavigationManager Nav
 @implements IDisposable
 
 <div class="game-wrapper">
@@ -55,9 +56,6 @@
 </div>
 
 @code {
-    private GameLevel? currentLevel;
-    private GameScenario? currentScenario;
-
     protected override async Task OnInitializedAsync()
     {
         // Prenumerera på ändringar i statet
@@ -68,7 +66,7 @@
             // Hämtar JSON-filen. Dubbelkolla att mappen heter 'game-data' i wwwroot
             currentLevel = await Http.GetFromJsonAsync<GameLevel>("game-data/level1.json");
 
-            if (currentLevel != null)
+            if (!string.IsNullOrEmpty(State.CurrentNodeId))
             {
                 // Om vi precis startat spelet, sätt CurrentNodeId till start-noden från JSON
                 if (string.IsNullOrEmpty(State.CurrentNodeId) || State.CurrentNodeId == "Start")
@@ -85,7 +83,7 @@
         }
     }
 
-    private void OnChoiceSelected(GameChoice choice)
+    private async Task OnChoiceSelected(GameChoice choice)
     {
         // Uppdatera historik och ID via tjänsten
         State.HandleChoice(choice);
@@ -94,9 +92,20 @@
         UpdateActiveScenario();
     }
 
-    private void UpdateActiveScenario()
-    {
-        if (currentLevel != null)
+            var qNextLevel = Uri.EscapeDataString(choice.NextLevel);
+            var qNextNode = Uri.EscapeDataString(choice.NextNodeId ?? string.Empty);
+            Nav.NavigateTo($"/summary?nextLevel={qNextLevel}&nextNode={qNextNode}");
+            return;
+        }
+
+        // otherwise handle same-level navigation via engine
+        await Engine.SelectChoice(choice);
+
+        var ended = Engine.CurrentScenario == null
+                    || Engine.CurrentScenario.IsTerminal
+                    || (!string.IsNullOrEmpty(choice.NextNodeId) && choice.NextNodeId.StartsWith("end_"));
+
+        if (ended)
         {
             // Hittar det scenario i listan som matchar ID:t vi är på just nu
             currentScenario = currentLevel.Scenarios

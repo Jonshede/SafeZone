@@ -1,0 +1,92 @@
+@page "/summary"
+@using SafeZone.Logic
+@using SafeZone.Models
+@inject GameStateService State
+@inject NavigationManager Nav
+@inject GameEngine Engine
+
+<div class="summary-page container py-4">
+    <h1>Summary</h1>
+
+    @if (State.ChoiceHistory == null || !State.ChoiceHistory.Any())
+    {
+        <p>No actions recorded.</p>
+    }
+    else
+    {
+        <p>Actions chosen so far (all levels):</p>
+        <ol>
+            @foreach (var entry in State.ChoiceHistory)
+            {
+                <li>@entry</li>
+            }
+        </ol>
+    }
+
+    <div class="summary-actions mt-3">
+        @if (!string.IsNullOrEmpty(_nextLevel))
+        {
+            <button class="btn btn-primary me-2" @onclick="ContinueToNextLevel">Continue to next level</button>
+        }
+        <button class="btn btn-secondary me-2" @onclick="ContinueFromCheckpoint">Continue from last checkpoint</button>
+        <button class="btn btn-link" @onclick="BackToMenu">Back to menu</button>
+    </div>
+</div>
+
+@code {
+    private string? _nextLevel;
+    private string? _nextNode;
+
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var queryString = uri.Query;
+
+        if (!string.IsNullOrEmpty(queryString))
+        {
+            var pairs = queryString.TrimStart('?')
+                                   .Split('&', StringSplitOptions.RemoveEmptyEntries);
+
+            var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var p in pairs)
+            {
+                var kv = p.Split('=', 2);
+                var key = Uri.UnescapeDataString(kv[0]);
+                var value = kv.Length > 1 ? Uri.UnescapeDataString(kv[1]) : string.Empty;
+                dict[key] = value;
+            }
+
+            if (dict.TryGetValue("nextLevel", out var nl) && !string.IsNullOrEmpty(nl))
+                _nextLevel = nl;
+            if (dict.TryGetValue("nextNode", out var nn) && !string.IsNullOrEmpty(nn))
+                _nextNode = nn;
+        }
+    }
+
+    private async Task ContinueToNextLevel()
+    {
+        if (string.IsNullOrEmpty(_nextLevel))
+        {
+            Nav.NavigateTo("/play");
+            return;
+        }
+
+        // Load the next level and set node if provided
+        await Engine.LoadLevel(_nextLevel);
+        if (!string.IsNullOrEmpty(_nextNode))
+            State.SetCurrentNode(_nextNode);
+
+        Nav.NavigateTo("/play");
+    }
+
+    private void ContinueFromCheckpoint()
+    {
+        State.ResetToCheckpoint();
+        Nav.NavigateTo("/play");
+    }
+
+    private void BackToMenu()
+    {
+        Nav.NavigateTo("/");
+    }
+}
