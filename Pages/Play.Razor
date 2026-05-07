@@ -1,71 +1,59 @@
 ﻿@page "/play"
-@inject HttpClient Http
+@using SafeZone.Models
+@using SafeZone.Logic
+@inject GameEngine Engine
 @inject GameStateService State
 @implements IDisposable
 
-<div class="game-container">
-    @if (GameScenario == null)
+<div class="container mt-5">
+    @if (Engine.IsLoading)
     {
-        <p>Laddar omgivningen...</p>
+        <div class="text-center mt-5">
+            <div class="spinner-border text-info" role="status"></div>
+            <p class="mt-2 italic">Loading tactical data...</p>
+        </div>
     }
-    else
+    else if (Engine.CurrentScenario != null)
     {
-        <div class="scenario-box">
-            <p class="scenario-text">@currentScenario.Text</p>
+        <div class="card shadow-lg p-4 bg-dark text-light border-secondary">
+            <div class="card-body">
+                <p class="fs-4 mb-4">@Engine.CurrentScenario.Text</p>
 
-            @if (!string.IsNullOrEmpty(currentScenario.ImagePath))
-            {
-                <img src="@currentScenario.ImagePath" alt="Scenbild" class="game-img" />
-            }
-
-            <div class="choices-list">
-                @foreach (var choice in currentScenario.Choices)
-                {
-                    <button class="choice-button" @onclick="() => OnChoiceSelected(choice)">
-                        @choice.ButtonText
-                    </button>
-                }
+                <div class="d-grid gap-3">
+                    @foreach (var gameChoice in Engine.CurrentScenario.Choices)
+                    {
+                        <button class="btn btn-outline-info btn-lg text-start"
+                                @onclick="() => Engine.SelectChoice(gameChoice)">
+                            @gameChoice.ButtonText
+                        </button>
+                    }
+                </div>
             </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between align-items-center">
+            <button class="btn btn-sm btn-outline-warning" @onclick="State.ResetToCheckpoint">
+                Load Last Checkpoint
+            </button>
+            <span class="text-muted small">Location: @State.CurrentNodeId</span>
         </div>
     }
 </div>
 
 @code {
-    private GameScenario? currentScenario;
-    private List<GameScenario> allScenarios = new();
-
     protected override async Task OnInitializedAsync()
     {
-        // 1. Prenumerera på uppdateringar
+        // Vi prenumererar på OnChange så att sidan ritas om när ett val görs
         State.OnChange += StateHasChanged;
 
-        // 2. Ladda in JSON-datan (Här använder vi din wwwroot-fil)
-        // Obs: Du kan behöva justera typen beroende på hur din JSON ser ut
-        var data = await Http.GetFromJsonAsync<List<GameScenario>>("game-data/level1.json");
-        if (data != null)
-        {
-            allScenarios = data;
-            UpdateActiveScenario();
-        }
-    }
-
-    private void OnChoiceSelected(GameChoice choice)
-    {
-        // Uppdatera historik och ID i servicen
-        State.HandleChoice(choice);
-
-        // Uppdatera den lokala vyn
-        UpdateActiveScenario();
-    }
-
-    private void UpdateActiveScenario()
-    {
-        // Hitta rätt scenario i listan baserat på vad som står i GameStateService
-        currentScenario = allScenarios.FirstOrDefault(s => s.Id == State.CurrentNodeId);
+        // Här laddar vi in din engelska JSON-fil
+        // Se till att filen heter "the_city.json" i wwwroot/data/
+        await Engine.LoadLevel("the_city");
     }
 
     public void Dispose()
     {
+        // Viktigt att ta bort prenumerationen när sidan stängs ner för att undvika minnesläckor
         State.OnChange -= StateHasChanged;
     }
 }
