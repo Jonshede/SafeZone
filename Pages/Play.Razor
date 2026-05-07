@@ -5,24 +5,48 @@
 @inject GameStateService State
 @implements IDisposable
 
-<div class="game-container">
+<div class="game-wrapper">
+    @* DYNAMISK BAKGRUND: Byter bild baserat på scenariot, annars default *@
+    @if (currentScenario != null && !string.IsNullOrEmpty(currentScenario.ImagePath))
+    {
+        <img src="@currentScenario.ImagePath" class="image-bg" alt="Scene Background" />
+    }
+    else
+    {
+        @* Fallback-bild om ImagePath saknas i JSON *@
+        <img src="images/start-bg.jpg" class="image-bg" alt="Default Background" />
+    }
+
     @if (currentScenario == null)
     {
-        <div class="loading-box">
-            <p>Laddar berättelsen...</p>
+        @* LOADING SCREEN *@
+        <div class="start-content">
+            <h1 class="title">INITIALIZING...</h1>
+            <div class="divider"></div>
+            <p class="subtitle">Fetching tactical data from the grid</p>
         </div>
     }
     else
     {
-        <div class="scenario-box">
-            <h1>@currentLevel?.LevelName</h1>
-            <p class="scenario-text">@currentScenario.Text</p>
+        @* SPEL-INTERFACE *@
+        <div class="content-box">
+            @* Nivåns namn som en liten rubrik *@
+            <h2 style="color: #ff4e00; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 2px;">
+                @currentLevel?.LevelName
+            </h2>
+            <div class="divider" style="width: 100px; margin: 0 auto 1.5rem auto;"></div>
+            
+            @* Själva berättelsetexten *@
+            <p class="scenario-text">
+                @currentScenario.Text
+            </p>
 
-            <div class="choices-list">
+            @* Valmöjligheter *@
+            <div class="choices-list d-flex flex-wrap justify-content-center">
                 @foreach (var choice in currentScenario.Choices)
                 {
-                    <button class="choice-button" @onclick="() => OnChoiceSelected(choice)">
-                        @choice.ButtonText
+                    <button class="btn-safezone" @onclick="() => OnChoiceSelected(choice)">
+                        [ @choice.ButtonText ]
                     </button>
                 }
             </div>
@@ -36,32 +60,37 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Prenumerera på ändringar i statet
         State.OnChange += StateHasChanged;
 
         try
         {
-            // Load the level file from wwwroot/game-data/level1.json
+            // Hämtar JSON-filen. Dubbelkolla att mappen heter 'game-data' i wwwroot
             currentLevel = await Http.GetFromJsonAsync<GameLevel>("game-data/level1.json");
 
             if (currentLevel != null)
             {
-                // Ensure state has a valid start node (optional)
-                if (string.IsNullOrEmpty(State.CurrentNodeId))
+                // Om vi precis startat spelet, sätt CurrentNodeId till start-noden från JSON
+                if (string.IsNullOrEmpty(State.CurrentNodeId) || State.CurrentNodeId == "Start")
                 {
                     State.CurrentNodeId = currentLevel.StartNodeId;
                 }
+                
                 UpdateActiveScenario();
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading level: {ex.Message}");
+            Console.WriteLine($"Error loading level data: {ex.Message}");
         }
     }
 
     private void OnChoiceSelected(GameChoice choice)
     {
+        // Uppdatera historik och ID via tjänsten
         State.HandleChoice(choice);
+        
+        // Uppdatera vad som visas på skärmen
         UpdateActiveScenario();
     }
 
@@ -69,6 +98,7 @@
     {
         if (currentLevel != null)
         {
+            // Hittar det scenario i listan som matchar ID:t vi är på just nu
             currentScenario = currentLevel.Scenarios
                 .FirstOrDefault(s => s.Id == State.CurrentNodeId);
         }
@@ -76,6 +106,7 @@
 
     public void Dispose()
     {
+        // Städa upp prenumerationen
         State.OnChange -= StateHasChanged;
     }
 }
