@@ -2,12 +2,29 @@
 @inject HttpClient Http
 @using SafeZone.Models
 
+@inherits LayoutComponentBase
+@inject HttpClient Http
+
+<NavMenu />
+
+<div class="main-content">
+    <div class="container">
+        @Body
+    </div>
+</div>
+
 @code {
-    private GameScenario levelData;
+    private SafeZone.Models.GameScenario? levelData;
 
     protected override async Task OnInitializedAsync()
     {
-        // Här hämtar vi filen från wwwroot
-        levelData = await Http.GetFromJsonAsync<GameScenario>("game-data/level1.json");
+        try
+        {
+            levelData = await Http.GetFromJsonAsync<SafeZone.Models.GameScenario>("game-data/level1.json");
+        }
+        catch
+        {
+            // Ignore load errors so the layout still renders
+        }
     }
 }
