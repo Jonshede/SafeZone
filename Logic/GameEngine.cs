@@ -26,18 +26,43 @@ namespace SafeZone.Logic
         public async Task LoadLevel(string levelName)
         {
             IsLoading = true;
-            var data = await _http.GetFromJsonAsync<GameLevel>($"game-data/{levelName}.json");
+            var url = $"game-data/{levelName}.json";
+            Console.WriteLine($"[GameEngine] Attempting to load level URL: {url}");
 
-            if (data != null)
+            try
             {
-                _loadedLevel = data;
-                _activeScenarios = data.Scenarios.ToDictionary(s => s.Id);
+                var data = await _http.GetFromJsonAsync<GameLevel>(url);
+                if (data == null)
+                {
+                    Console.WriteLine($"[GameEngine] LoadLevel returned null for {url}");
+                }
+                else
+                {
+                    _loadedLevel = data;
+                    _activeScenarios = data.Scenarios.ToDictionary(s => s.Id);
 
-                // keep state in sync with loaded level
-                _state.CurrentLevelName = levelName;
-                _state.SetCurrentNode(data.StartNodeId);
+                    // keep state in sync with loaded level
+                    _state.CurrentLevelName = levelName;
+                    _state.SetCurrentNode(data.StartNodeId);
+
+                    // If the start node is a checkpoint, save it so ResetToCheckpoint restores here
+                    if (CurrentScenario?.IsCheckpoint == true)
+                    {
+                        _state.SaveCheckpoint();
+                        Console.WriteLine($"[GameEngine] Saved checkpoint for level '{levelName}' node '{data.StartNodeId}'");
+                    }
+
+                    Console.WriteLine($"[GameEngine] Loaded level '{levelName}' with start node '{data.StartNodeId}'");
+                }
             }
-            IsLoading = false;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[GameEngine] Exception loading {url}: {ex}");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         // Now async so we can load another level as part of a choice
