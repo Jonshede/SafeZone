@@ -1,7 +1,7 @@
 {
   "LevelName": "The City",
   "StartNodeId": "intro",
-  "Scenario": [
+  "Scenarios": [
     {
       "Id": "intro",
       "Text": "The air raid sirens are wailing across the city. You are standing in your hallway. What do you prioritize taking with you?",

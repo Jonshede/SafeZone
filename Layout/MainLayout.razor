@@ -1,13 +1,13 @@
-﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+﻿// HttpClient är förinställd att titta i wwwroot som startpunkt
+@inject HttpClient Http
+@using SafeZone.Models
 
-    <main>
+@code {
+    private GameScenario levelData;
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+    protected override async Task OnInitializedAsync()
+    {
+        // Här hämtar vi filen från wwwroot
+        levelData = await Http.GetFromJsonAsync<GameScenario>("game-data/level1.json");
+    }
+}

@@ -1,0 +1,17 @@
+﻿@page "/"
+@inject NavigationManager Nav
+
+<div class="start-screen text-center">
+    <h1 class="display-3">SAFEZONE</h1>
+    <p class="lead">En civil överlevnadsskildring i krigstid.</p>
+
+    <button class="btn-start" @onclick="StartGame">STARTA RESAN</button>
+</div>
+
+@code {
+    void StartGame()
+    {
+        // Skickar användaren till Play-sidan
+        Nav.NavigateTo("/play");
+    }
+}
