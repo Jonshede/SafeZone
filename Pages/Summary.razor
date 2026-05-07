@@ -3,6 +3,7 @@
 @using System.Linq
 @using SafeZone.Logic
 @using SafeZone.Models
+@using Microsoft.AspNetCore.Components
 @inject GameStateService State
 @inject NavigationManager Nav
 @inject GameEngine Engine
@@ -46,7 +47,7 @@
                             <ul class="list-unstyled">
                                 @foreach (var entry in levelGroup)
                                 {
-                                    <li class="mb-1">• @entry.Text</li>
+                                    <li class="mb-1">• @((MarkupString)entry.Text)</li>
                                 }
                             </ul>
                         </div>
@@ -114,18 +115,31 @@
                 _nextLevelQuery = nl;
             if (dict.TryGetValue("nextNode", out var nn) && !string.IsNullOrEmpty(nn))
                 _nextNode = nn;
+
+            // Accept showAll=1 or showAll=true to force showing the full history
+            if (dict.TryGetValue("showAll", out var sa) &&
+                (sa == "1" || sa.Equals("true", StringComparison.OrdinalIgnoreCase)))
+            {
+                _showAllLevels = true;
+                _filterLevel = null; // don't filter when showing everything
+            }
         }
 
-        if (!string.IsNullOrEmpty(_nextLevelQuery))
+        // Default filter: if not showing all, pick last recorded level (most recently completed)
+        if (!_showAllLevels)
         {
-            if (State.ChoiceHistory != null && State.ChoiceHistory.Any())
+            if (!string.IsNullOrEmpty(_filterLevel))
+            {
+                // filter was provided explicitly earlier, keep it
+            }
+            else if (State.ChoiceHistory != null && State.ChoiceHistory.Any())
+            {
                 _filterLevel = State.ChoiceHistory.Last().LevelName;
+            }
             else
+            {
                 _filterLevel = State.CurrentLevelName;
-        }
-        else if (State.ChoiceHistory != null && State.ChoiceHistory.Any())
-        {
-            _filterLevel = State.ChoiceHistory.Last().LevelName;
+            }
         }
     }
 
