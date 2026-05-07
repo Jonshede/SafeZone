@@ -4,11 +4,9 @@
 @inherits LayoutComponentBase
 @inject HttpClient Http
 
-<div class="main-content">
-    <div class="container">
-        @Body
-    </div>
-</div>
+<main>
+    @Body
+</main>
 
 @code {
     private SafeZone.Models.GameScenario? levelData;
