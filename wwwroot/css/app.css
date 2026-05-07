@@ -73,6 +73,7 @@ body {
     font-size: 1.4rem;
     margin-bottom: 2rem;
     line-height: 1.4;
+    white-space: pre-wrap; /* respects \n and wraps long lines */
 }
 
 /* Knappar */
