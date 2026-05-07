@@ -1,7 +1,6 @@
 {
   "LevelName": "The City",
   "StartNodeId": "intro",
-  "MusicPath": "audio/city-ambient.mp3",
   "Scenarios": [
     {
       "Id": "intro",
