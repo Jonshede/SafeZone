@@ -7,44 +7,41 @@
 @implements IDisposable
 
 <div class="game-wrapper">
-    @* DYNAMISK BAKGRUND: Byter bild baserat på scenariot, annars default *@
-    @if (currentScenario != null && !string.IsNullOrEmpty(currentScenario.ImagePath))
+    @* BAKGRUND: Vi använder Engine för att hämta aktuell bild *@
+    @if (Engine.CurrentScenario != null && !string.IsNullOrEmpty(Engine.CurrentScenario.ImagePath))
     {
-        <img src="@currentScenario.ImagePath" class="image-bg" alt="Scene Background" />
+        <img src="@Engine.CurrentScenario.ImagePath" class="image-bg" alt="Scene Background" />
     }
     else
     {
-        @* Fallback-bild om ImagePath saknas i JSON *@
         <img src="images/start-bg.jpg" class="image-bg" alt="Default Background" />
     }
 
-    @if (currentScenario == null)
+    @if (Engine.IsLoading)
     {
-        @* LOADING SCREEN *@
+        @* LOADING SCREEN - Visas medan Engine jobbar *@
         <div class="start-content">
             <h1 class="title">INITIALIZING...</h1>
             <div class="divider"></div>
             <p class="subtitle">Fetching tactical data from the grid</p>
         </div>
     }
-    else
+    else if (Engine.CurrentScenario != null)
     {
-        @* SPEL-INTERFACE *@
+        @* SPEL-INTERFACE - Nu med den centrala strukturen *@
         <div class="content-box">
-            @* Nivåns namn som en liten rubrik *@
+            @* Vi försöker hämta nivåns namn från Engine om det finns *@
             <h2 style="color: #ff4e00; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 2px;">
-                @currentLevel?.LevelName
+                REPORT: MISSION DATA
             </h2>
             <div class="divider" style="width: 100px; margin: 0 auto 1.5rem auto;"></div>
             
-            @* Själva berättelsetexten *@
             <p class="scenario-text">
-                @currentScenario.Text
+                @Engine.CurrentScenario.Text
             </p>
 
-            @* Valmöjligheter *@
             <div class="choices-list d-flex flex-wrap justify-content-center">
-                @foreach (var choice in currentScenario.Choices)
+                @foreach (var choice in Engine.CurrentScenario.Choices)
                 {
                     <button class="btn-safezone" @onclick="() => OnChoiceSelected(choice)">
                         [ @choice.ButtonText ]
@@ -58,64 +55,60 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        // Prenumerera på ändringar i statet
+        // Prenumerera på ändringar
         State.OnChange += StateHasChanged;
 
         try
         {
-            // Hämtar JSON-filen. Dubbelkolla att mappen heter 'game-data' i wwwroot
-            currentLevel = await Http.GetFromJsonAsync<GameLevel>("game-data/level1.json");
+            // Vilken nivå ska vi ladda? Fråga State.
+            var levelToLoad = string.IsNullOrEmpty(State.CurrentLevelName) ? "level1" : State.CurrentLevelName;
+            
+            // Använd motorn för att sköta laddningen (renare!)
+            await Engine.LoadLevel(levelToLoad);
 
+            // Om vi har ett sparat ID i statet, se till att motorn synkar dit
             if (!string.IsNullOrEmpty(State.CurrentNodeId))
             {
-                // Om vi precis startat spelet, sätt CurrentNodeId till start-noden från JSON
-                if (string.IsNullOrEmpty(State.CurrentNodeId) || State.CurrentNodeId == "Start")
-                {
-                    State.CurrentNodeId = currentLevel.StartNodeId;
-                }
-                
-                UpdateActiveScenario();
+                // Om din Engine har en metod för att sätta scenariot direkt, annars sköter LoadLevel det.
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading level data: {ex.Message}");
+            Console.WriteLine($"Error during initialization: {ex.Message}");
         }
     }
 
     private async Task OnChoiceSelected(GameChoice choice)
     {
-        // Uppdatera historik och ID via tjänsten
-        State.HandleChoice(choice);
-        
-        // Uppdatera vad som visas på skärmen
-        UpdateActiveScenario();
-    }
+        // 1. Kolla om valet leder till en NY NIVÅ (Level Transition)
+        if (!string.IsNullOrEmpty(choice.NextLevel))
+        {
+            if (!string.IsNullOrEmpty(choice.SummaryText))
+                State.ChoiceHistory.Add(choice.SummaryText);
 
             var qNextLevel = Uri.EscapeDataString(choice.NextLevel);
             var qNextNode = Uri.EscapeDataString(choice.NextNodeId ?? string.Empty);
+            
+            // Skicka spelaren till sammanfattningen innan nästa nivå börjar
             Nav.NavigateTo($"/summary?nextLevel={qNextLevel}&nextNode={qNextNode}");
             return;
         }
 
-        // otherwise handle same-level navigation via engine
-        await Engine.SelectChoice(choice);
+        // 2. Hantera vanliga val inom samma nivå via motorn
+        Engine.SelectChoice(choice);
 
-        var ended = Engine.CurrentScenario == null
-                    || Engine.CurrentScenario.IsTerminal
+        // 3. Kolla om spelet tog slut här (Terminal-nod eller ID som börjar på 'end_')
+        var isEnd = Engine.CurrentScenario == null 
                     || (!string.IsNullOrEmpty(choice.NextNodeId) && choice.NextNodeId.StartsWith("end_"));
 
-        if (ended)
+        if (isEnd)
         {
-            // Hittar det scenario i listan som matchar ID:t vi är på just nu
-            currentScenario = currentLevel.Scenarios
-                .FirstOrDefault(s => s.Id == State.CurrentNodeId);
+            Nav.NavigateTo("/summary");
         }
     }
 
     public void Dispose()
     {
-        // Städa upp prenumerationen
         State.OnChange -= StateHasChanged;
     }
 }
