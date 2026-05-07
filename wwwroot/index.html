@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +10,6 @@
     <link href="SafeZone.styles.css" rel="stylesheet" />
     <link href="manifest.webmanifest" rel="manifest" />
 </head>
-
 <body>
     <div id="app">
         <div style="color: #ff4e00; text-align: center; padding-top: 20vh; font-family: monospace;">
@@ -19,13 +17,26 @@
         </div>
     </div>
 
-    <div id="blazor-error-ui" style="display:none;"> <!--NOT IN PLAY ATM--> d> 
+    <div id="blazor-error-ui" style="display:none;">
         An unhandled error has occurred.
         <a href="." class="reload">Reload</a>
         <span class="dismiss">🗙</span>
     </div>
+
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
-</body>
 
+    <script>// Vi lämnar parentesen tom så att VS inte hittar någon "parameter" att klaga på
+    function playAudio() {
+        // Vi hämtar det första värdet (elementId) manuellt från "arguments"
+        var id = arguments[0];
+        var audio = document.getElementById(id);
+
+        if (audio instanceof HTMLAudioElement) {
+            audio.play().catch(function (err) {
+                console.log("Ljudet pausat av webbläsaren. Väntar på klick.");
+            });
+        }
+    }</script>
+</body>
 </html>

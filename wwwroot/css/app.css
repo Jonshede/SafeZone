@@ -1,3 +1,20 @@
+main {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: block;
+    position: relative;
+    cursor: default; /* Gör att klick registreras bra */
+}
+
+/* Säkerställ att inga marginaler på body trycker ner main */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 /* Grundinställningar */
 body {
     background-color: #0b0e11;
