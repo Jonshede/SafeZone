@@ -1,14 +1,38 @@
-@inject HttpClient Http
-@using SafeZone.Models
-
 @inherits LayoutComponentBase
 @inject HttpClient Http
+@inject IJSRuntime JS
 
-<main>
+<main @onclick="TryStartMusic">
+    @* Persistent ljudspelare som täcker hela spelet *@
+    <audio id="gameMusic" loop>
+        <source src="/audio/game-theme.mp3" type="audio/mpeg">
+    </audio>
+
     @Body
 </main>
 
 @code {
+    private bool _musicStarted = false;
+
+    private async Task TryStartMusic()
+    {
+        // Startar musiken vid första klicket på skärmen
+        if (!_musicStarted)
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("playAudio", "gameMusic");
+                _musicStarted = true;
+            }
+            catch
+            {
+                // Ignorera om JavaScript inte är redo än
+            }
+        }
+    }
+
+    // Om du behöver ladda levelData i layouten behåller vi detta,
+    // annars kan du ta bort HttpClient och OnInitialized härifrån.
     private SafeZone.Models.GameScenario? levelData;
 
     protected override async Task OnInitializedAsync()
@@ -19,7 +43,7 @@
         }
         catch
         {
-            // Ignore load errors so the layout still renders
+            // Ignore load errors
         }
     }
 }
