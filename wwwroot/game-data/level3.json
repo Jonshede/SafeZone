@@ -1,5 +1,5 @@
 {
-    "LevelName": "The docks",
+    "LevelName": "The forest",
     "StartNodeId": "intro",
     "Scenarios": [
         {
@@ -8,12 +8,12 @@
             "IsCheckpoint": true,
             "Choices": [
                 {
-                    "ButtonText": "Cars and shit",
+                    "ButtonText": "Forest people are attacking",
                     "NextNodeId": "the_street",
-                    "SummaryText": "You prioritized survival equipment."
+                    "SummaryText": "You picked that."
                 },
                 {
-                    "ButtonText": "People and army",
+                    "ButtonText": "Squirrels takes your food",
                     "NextNodeId": "the_street",
                     "SummaryText": "You chose to save what matters to the heart."
                 }
@@ -25,14 +25,12 @@
             "Choices": [
                 {
                     "ButtonText": "Help the neighbor",
-                    "NextNodeId": "intro",
-                    "NextLevel": "level3",
+                    "NextNodeId": "end_hero",
                     "SummaryText": "You stopped to help a fellow human in need."
                 },
                 {
                     "ButtonText": "Run for the bus",
-                    "NextNodeId": "intro",
-                    "NextLevel": "level3",
+                    "NextNodeId": "end_shelter",
                     "SummaryText": "You prioritized your own immediate safety."
                 }
             ]
