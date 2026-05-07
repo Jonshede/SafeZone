@@ -1,4 +1,6 @@
-﻿public class GameStateService
+﻿using SafeZone.Models;
+
+public class GameStateService
 {
     // --- Aktiv speldata (det som ändras hela tiden) ---
     public string CurrentNodeId { get; set; } = "Start";
@@ -10,12 +12,12 @@
 
     public event Action OnChange;
 
-    public void HandleChoice(Choice choice)
+    public void HandleChoice(GameChoice gameChoice)
     {
-        if (!string.IsNullOrEmpty(choice.SummaryText))
-            ChoiceHistory.Add(choice.SummaryText);
+        if (!string.IsNullOrEmpty(gameChoice.SummaryText))
+            ChoiceHistory.Add(gameChoice.SummaryText);
 
-        CurrentNodeId = choice.NextNodeId;
+        CurrentNodeId = gameChoice.NextNodeId;
         NotifyStateChanged();
     }
 
