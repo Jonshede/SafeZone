@@ -49,13 +49,17 @@ body {
 
 /* Den stora HUD-boxen (Ramen runt texten) */
 .content-box {
-    background: rgba(11, 14, 17, 0.85);
+    background: rgba(11, 14, 17, 0.65);
     border: 2px solid #ff4e00;
     padding: 2rem;
     max-width: 900px;
     width: 95%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px); /* Snygg suddighet bakom boxen */
+}
+
+.content-box h1 {
+    font-size: 4rem;
 }
 
 /* Typografi */
@@ -225,4 +229,54 @@ body {
 .modal-danger {
     max-width: 400px !important; /* Gör hela varningsrutan mer kompakt */
     padding: 1.5rem !important;
+}
+
+/* Game Over Behållare */
+.game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85); /* Halvgenomskinlig svart */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Alltid överst */
+    pointer-events: none; /* Gör att man inte kan klicka på knappar bakom */
+}
+
+/* Själva texten */
+.game-over-text {
+    font-size: 8rem;
+    color: #ff0000;
+    font-family: 'VT323', monospace;
+    text-transform: uppercase;
+    text-shadow: 0 0 30px #ff0000;
+    letter-spacing: 15px;
+    animation: gameOverAnimation 4s forwards; /* Kör i 4 sekunder */
+}
+
+@keyframes gameOverAnimation {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+        filter: blur(10px);
+    }
+
+    15% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0px);
+    }
+
+    85% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.2);
+    }
 }
