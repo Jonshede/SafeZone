@@ -80,7 +80,7 @@
       "Text": "The air raid siren suddenly sets off and you can see bomber planes closing in on the city \nWhat's your next action?'",
       "Choices": [
         {
-          "ButtonText": "You follow your instincts and run with a larger mass of crowd towards the school area where you know there's a bunker.",
+          "ButtonText": "You follow your instincts and run with a larger mass of crowd towards the school area where you know there's a safety bunker for civilians.",
           "NextNodeId": "l1.a1"
         },
         {
@@ -102,10 +102,125 @@
         {
           "ButtonText": "You died",
           "NextNodeId": "intro",
-          "SummaryText": "You choose to follow the herd. A critical mistake as it was a prime target for an enemy plane. \n<strong>You died.</strong>"
+          "SummaryText": "You choose to follow the herd. A critical mistake as it was a prime target for an enemy plane. \n \n<strong>You died.</strong>"
         }
       ]
     },
+    {
+      "Id": "l1.b1",
+      "Text": "The open staircase provides temporary shelter but you have to keep going. What's your choice?",
+      "Choices": [
+        {
+          "ButtonText": "Go down the stairs and access the cellar",
+          "NextNodeId": "l1.b2"
+        },
+        {
+          "ButtonText": "You run up the stairs to the second level",
+          "NextNodeId": "l1.b3"
+        }
+      ]
+    },
+
+    {
+      "Id": "l1.b2",
+      "Text": "The cellar is cloaked in darkness but you continue through it. A smell of gas creeps upon you",
+      "Choices": [
+        {
+          "ButtonText": "You ignore the smell and start to run through the darkness",
+          "NextNodeId": "l1.b2a1"
+        },
+        {
+          "ButtonText": "You hold your breath and feel your way along the walls",
+          "NextNodeId": "l1.b2b1"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b2a1",
+      "Text": "The darkness reveals nothing and the gas starts to cloud your judgement. Sleepiness descends upon you while hallucinations starts to appear in front of you",
+      "Choices": [
+        {
+          "ButtonText": "You cave to the sleepiness, suddenly the floor seems fairly comfortable. You lay down.",
+          "NextNodeId": "l1.b2a1a1"
+        },
+        {
+          "ButtonText": "A bright pink elephant wants to show you the exit. Follow it",
+          "NextNodeId": "l1.b2a1b1"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b2a1a1",
+      "Text": "You lay down on the floor, the gas making you sleepy. You contemplate your last thoughts as your last sleep begins.",
+      "IsTerminal": true,
+      "IsDead": true,
+      "Choices": [
+        {
+          "ButtonText": "You died.",
+          "NextNodeId": "intro"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b2a1b1",
+      "Text": "The elephant seems to know what he's doing so you choose to follow him. Unfortunately he knows nothing and makes you go in loops in the cellar. The gas slowly makes you unconscious and you fall on the floor, authorities finding your body months later.",
+      "IsTerminal": true,
+      "IsDead": true,
+      "Choices": [
+        {
+          "ButtonText": "You died.",
+          "NextNodeId": "intro"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b2b1",
+      "Text": "You identify that the gas might be dangerous and you try to hold your breath as much as you can. You traverse slowly through the pathway, a streak of orange-red light appearing at a distance. \nYou move closer and find the a door which you are able to open, bringing you outside. It's quickly apparent from where the orange-red colour came from, the buildings around you are burning.",
+      "Choices": [
+        {
+          "ButtonText": "You stop and take in the scene, finding it hauntingly beautiful.",
+          "NextNodeId": "l1.b2b1a1"
+        },
+        {
+          "ButtonText": "Continue towards the school area.",
+          "NextNodeId": "l1.b2b1b1"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b2b1a1",
+      "Text": "As you watch the fires raging chaos among the buildings, you hear a sound above your head. You look up, seeing that the building you were inside is also on fire. A large chunk of bricks have collapsed and struck the top of your head, instantly killing you.",
+      "IsTerminal": true,
+      "IsDead": true,
+      "Choices": [
+        {
+          "ButtonText": "You died",
+          "NextNodeId": "intro"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b2b1b1",
+      "Text": "You choose not to linger, trying to find a safe path between the burning buildings. You carefully avoid narrow pathways and falling debris, moving closer to the school area.",
+      "Choices": [
+        {
+          "ButtonText": "Continue",
+          "NextNodeId": "l1.b2b1b2"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b2b1b2",
+      "Text": "You reach the school area but you fall in despair as you see the area crowded, people scattered as to not be targets for bombers. \nAs you wait for your turn, a voice on the area speakers says 'The safety bunker is now full. We cannot grant more people access to it' \nYou groan loudly in frustration and panic, as does other people. You hear a couple talk about a safe haven at the harbors and you decide to hurry towards the next area. ",
+      "Choices": [
+        {
+          "ButtonText": "Continue",
+          "NextLevel": "level2",
+          "NextNodeId": "intro"
+        }
+      ]
+    },
+
     {
       "Id": "l1.end",
       "Text": "The atmosphere on the streets shifts suddenly and an eerie silence covers the area as a blanket. \nChoose your next action to the sudden shift:",
