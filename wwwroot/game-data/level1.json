@@ -4,7 +4,7 @@
   "Scenarios": [
     {
       "Id": "intro",
-      "Text": "You are a Pelle, 28 years old living in Gothenburg, Sweden. You're currently out shopping with your relatives, and they just went into a shop, while you keep waiting outside.",
+      "Text": "You are Pelle, a 28 years old student living in Gothenburg, Sweden.",
       "ImagePath": "images/introduction.jpg",
       "Choices": [
         {
@@ -112,6 +112,7 @@
       "Id": "l1.a1",
       "Text": "You choose to follow your instincts and follow the herd. They moving in a frenzied pace, panic in the air. \nA shadow appears on the sky and a bomber plane approaches. It fires off a missile towards the crowd, and you hear your final thoughts rush in your head before the world explodes around you.",
       "IsTerminal": true,
+      "IsDead": true,
       "Choices": [
         {
           "ButtonText": "You died",
@@ -126,11 +127,15 @@
       "Choices": [
         {
           "ButtonText": "Go down the stairs and access the cellar",
-          "NextNodeId": "l1.b2"
+          "NextNodeId": "l1.b2",
+          "SummaryText": "You chose to seek shelter in a staircase, moving downwards to the cellar."
+
         },
         {
           "ButtonText": "You run up the stairs to the second level",
-          "NextNodeId": "l1.b3"
+          "NextNodeId": "l1.b3",
+          "SummaryText": "You chose to seek shelter in a staircase, moving upwards to the second level."
+
         }
       ]
     },
@@ -141,11 +146,15 @@
       "Choices": [
         {
           "ButtonText": "You ignore the smell and start to run through the darkness",
-          "NextNodeId": "l1.b2a1"
+          "NextNodeId": "l1.b2a1",
+          "SummaryText": "You ignored the mysterious gas."
+
         },
         {
           "ButtonText": "You hold your breath and feel your way along the walls",
-          "NextNodeId": "l1.b2b1"
+          "NextNodeId": "l1.b2b1",
+          "SummaryText": "You tried to hold your breath from the mysterious gas."
+
         }
       ]
     },
@@ -155,11 +164,14 @@
       "Choices": [
         {
           "ButtonText": "You cave to the sleepiness, suddenly the floor seems fairly comfortable. You lay down.",
-          "NextNodeId": "l1.b2a1a1"
+          "NextNodeId": "l1.b2a1a1",
+          "SummaryText": "You fell asleep in the dark cellar, choking to death."
+
         },
         {
           "ButtonText": "A bright pink elephant wants to show you the exit. Follow it",
-          "NextNodeId": "l1.b2a1b1"
+          "NextNodeId": "l1.b2a1b1",
+          "SummaryText": "You choose poorly, the pink elephant couldn't help you'."
         }
       ]
     },
@@ -167,6 +179,7 @@
       "Id": "l1.b2a1a1",
       "Text": "You lay down on the floor, the gas making you sleepy. You contemplate your last thoughts as your last sleep begins.",
       "IsTerminal": true,
+      "IsDead": true,
       "Choices": [
         {
           "ButtonText": "You died.",
@@ -178,6 +191,7 @@
       "Id": "l1.b2a1b1",
       "Text": "The elephant seems to know what he's doing so you choose to follow him. Unfortunately he knows nothing and makes you go in loops in the cellar. The gas slowly makes you unconscious and you fall on the floor, authorities finding your body months later.",
       "IsTerminal": true,
+      "IsDead": true,
       "Choices": [
         {
           "ButtonText": "You died.",
@@ -203,6 +217,7 @@
       "Id": "l1.b2b1a1",
       "Text": "As you watch the fires raging chaos among the buildings, you hear a sound above your head. You look up, seeing that the building you were inside is also on fire. A large chunk of bricks have collapsed and struck the top of your head, instantly killing you.",
       "IsTerminal": true,
+      "IsDead": true,
       "Choices": [
         {
           "ButtonText": "You died",
@@ -222,7 +237,170 @@
     },
     {
       "Id": "l1.b2b1b2",
-      "Text": "You reach the school area but you fall in despair as you see the area crowded, people scattered as to not be targets for bombers. \nAs you wait for your turn, a voice on the area speakers says 'The safety bunker is now full. We cannot grant more people access to it' \nYou groan loudly in frustration and panic, as does other people. You hear a couple talk about a safe haven at the harbors and you decide to hurry towards the next area. ",
+      "Text": "You reach the school area but you fall in despair as you see the area crowded, people scattered as to not be targets for bombers. \nWhile you wait for your turn, a voice on the area speakers says 'The safety bunker is now full. We cannot grant more people access to it' \nYou groan loudly in frustration and panic, as does other people. You hear a couple talk about a safe haven at the harbors and you decide to hurry towards the next area.",
+      "Choices": [
+        {
+          "ButtonText": "Continue",
+          "NextLevel": "level2",
+          "NextNodeId": "intro"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b3",
+      "Text": "You run up the stairs to the second level. All the doors are locked to the apartments but through the window you see a rusty fire escape ladder and a nearby metal roof slightly lower down.",
+      "Choices": [
+        {
+          "ButtonText": "You try your luck with the rusty fire escape ladder",
+          "NextNodeId": "l1.b3a1"
+        },
+        {
+          "ButtonText": "You try your luck with jumping over to the metal roof",
+          "NextNodeId": "l1.b3b1"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b3a1",
+      "Text": "You move out the window, grabbing the rusty ladder tightly. You slowly start to descend on its steps. \nYou make it halfways down when the ladder starts to creak and slowly starts to bend. You see a container below you filled with clutter but the fall is quite high.",
+      "Choices": [
+        {
+          "ButtonText": "You try your luck with the container, letting go off the ladder",
+          "NextNodeId": "l1.b3a1a1"
+        },
+        {
+          "ButtonText": "You decide to try to climb down the last steps, the ladder should hold",
+          "NextNodeId": "l1.b3a1b1"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b3a1a1",
+      "Text": "You fall down into the container, getting slightly bruised from the clutter but relatively unharmed. With a deep sigh, you muster strength and climb out of the container and make your way out to the courtyard.",
+      "Choices": [
+        {
+          "ButtonText": "Continue",
+          "NextNodeId": "l1.b3a1a2"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b3a1a2",
+      "Text": "You see movement between the alleyways, and you head out to see a group of people moving to the school area. You follow them at a close distance.",
+      "Choices": [
+        {
+          "ButtonText": "Continue",
+          "NextNodeId": "l1.b2b1b2"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b3a1b1",
+      "Text": "You grip the ladder even tighter, your knuckles turning white from the stress. You try to descend once more, slowly making progress. After three steps, the ladder breaks from the top. \nYou fall to the ground, barely registering the events before the heavy ladder falls on you, killing you instantly.",
+      "IsTerminal": true,
+      "IsDead": true,
+      "Choices": [
+        {
+          "ButtonText": "You died",
+          "NextNodeId": "l1.b3a1a2"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b3b1",
+      "Text": "You climb out of the window, trying to measure the distance to the metal roof below you. You take a deep breath and jump off the ledge ",
+      "Choices": [
+        {
+          "ButtonText": "Continue",
+          "NextNodeId": "l1.b3b1a1"
+        }
+      ]
+    },
+    {
+      "Id": "l1.b3b1a1",
+      "Text": "The air rushes through your face as you aim for the nearby roof. The jump fails as you barely make the distance, your arms reaching for something to hold, flailing wildly before you lose your balance and fall backwards. The air once again rushes through your head before you land face down on the hard concrete, dying instantly.",
+      "IsTerminal": true,
+      "IsDead": true,
+      "Choices": [
+        {
+          "ButtonText": "You died",
+          "NextNodeId": "l1.b3b1a1"
+        }
+      ]
+    },
+    {
+      "Id": "l1.c1",
+      "Text": "The alleyway is dark and slightly scary but it's void of people. It's riddled with clutter, making progress through it risky. \nThe sound from the street behind you is growing more chaotic.",
+      "Choices": [
+        {
+          "ButtonText": "You decide to risk walking through the clutter.",
+          "NextNodeId": "l1.c1a1"
+        }
+      ]
+    },
+    {
+      "Id": "l1.c1a1",
+      "Text": "You try to make your way through the alleywall, the clutter making it a slow and tedious task. \nA bomb explodes a block away, making the clutter shift, pinning your foot beneath it. Panic starts to rise in your body.",
+      "Choices": [
+        {
+          "ButtonText": "You summon your strength and try to brute-force your leg free.",
+          "NextNodeId": "l1.c1a1a1"
+        },
+        {
+          "ButtonText": "You try calm yourself before attempting to slowly free your leg. .",
+          "NextNodeId": "l1.c1b1a1"
+        }
+      ]
+    },
+
+    {
+      "Id": "l1.c1a1a1",
+      "Text": "You succeed in breaking free, but you cut yourself on a sharp object, creating a large wound on your right leg. \nYou make it through the worst part of the clutter, finding some space to rest. Your leg is bleeding heavily",
+      "Choices": [
+        {
+          "ButtonText": "You sit down on the ground, trying to create a temporary bandaid for your leg with your jacket.",
+          "NextNodeId": "l1.c1a1a1a1"
+        },
+        {
+          "ButtonText": "You rest for a few seconds, but time is short. You decide to continue forwards.",
+          "NextNodeId": "l1.c1a1a1b1"
+        }
+      ]
+    },
+    {
+      "Id": "l1.c1a1a1a1",
+      "Text": "Your temporary band-aid stops the bleeding for the moment. You take a deep breath and try to continue forwards. The alleywall ends in an open area, giving you vision of the school and it's underground safe bunker. You move towards it'",
+      "Choices": [
+        {
+          "ButtonText": "Continue.",
+          "NextNodeId": "l1.c1a1a1a2"
+        }
+      ]
+    },
+    {
+      "Id": "l1.c1a1a1a2",
+      "Text": "You reach the school area but you fall in despair as you see the area crowded, people scattered as to not be targets for bombers. \nYour leg hurts badly while you wait for your turn, a voice on the area speakers says 'The safety bunker is now full. We cannot grant more people access to it' \nYou groan loudly in frustration and panic, as does other people. You hear a couple talk about a safe haven at the harbors and you decide to hurry towards the next area, as fast as your hurt leg allows you.",
+      "Choices": [
+        {
+          "ButtonText": "Continue",
+          "NextLevel": "level2",
+          "NextNodeId": "intro"
+        }
+      ]
+    },
+    {
+      "Id": "l1.c1a1a1b1",
+      "Text": "You try ignore the burning sensation in your leg as you continue into the open area, leaving the alleyway behind you. The open area gives you vision of the school and it's underground safe bunker. \nYou move towards it, the limp from your bleeding leg making it a slow progress.",
+      "Choices": [
+        {
+          "ButtonText": "Continue",
+          "NextNodeId": "l1.c1a1a1ab2"
+        }
+      ]
+    },
+    {
+      "Id": "l1.c1a1a1ab2",
+      "Text": "You reach the school area but you fall in despair as you see the area crowded, people scattered as to not be targets for bombers. \nYour leg bleeds and hurts badly while you wait for your turn, a voice on the area speakers says 'The safety bunker is now full. We cannot grant more people access to it' \nYou groan loudly in frustration and panic, as does other people. You hear a couple talk about a safe haven at the harbors and you decide to hurry towards the next area, as fast as your hurt leg allows you.",
       "Choices": [
         {
           "ButtonText": "Continue",
@@ -232,6 +410,20 @@
       ]
     },
 
+    {
+      "Id": "l1.c1b1a1",
+      "Text": ".",
+      "Choices": [
+        {
+          "ButtonText": "You summon your strength and try to brute-force your leg free.",
+          "NextNodeId": "l1.c1a1a1"
+        },
+        {
+          "ButtonText": "You try calm yourself before attempting to slowly free your leg. .",
+          "NextNodeId": "l1.c1b1a1"
+        }
+      ]
+    },
     {
       "Id": "l1.end",
       "Text": "The atmosphere on the streets shifts suddenly and an eerie silence covers the area as a blanket. \nChoose your next action to the sudden shift:",
