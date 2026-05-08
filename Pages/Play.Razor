@@ -15,15 +15,13 @@
         </div>
     }
 
-    @* BAKGRUND *@
-    @if (Engine.CurrentScenario != null && !string.IsNullOrEmpty(Engine.CurrentScenario.ImagePath))
-    {
-        <img src="@Engine.CurrentScenario.ImagePath" class="image-bg" alt="Scene Background" />
-    }
-    else
-    {
-        <img src="images/start-bg.jpg" class="image-bg" alt="Default Background" />
-    }
+    @* BAKGRUND: Nu "sticky" via Engine *@
+    <div class="background-container">
+        <img src="@Engine.CurrentBackground" 
+             class="image-bg fade-in" 
+             alt="Environment"
+             onerror="this.src='images/start-bg.jpg';" />
+    </div>
 
     @if (Engine.IsLoading)
     {

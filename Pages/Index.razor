@@ -1,20 +1,34 @@
 ﻿@page "/"
+@using SafeZone.Logic
 @inject NavigationManager Nav
+@inject GameEngine Engine
+@inject GameStateService State
 
 <div class="game-wrapper">
     <img src="images/start-bg.jpg" class="image-bg" alt="Start bg" />
 
     <div class="start-content">
-        <h1 class="title">SAFEZONE</h1>
-        <div class="divider"></div>
-        <p class="subtitle">How do you act?</p>
+        <div class="menu-box">
+            <h1 class="title">SAFEZONE</h1>
+            <div class="divider"></div>
+            <p class="subtitle">Can you make the right choice, and make it to safety?</p>
 
-        <button class="btn-start" @onclick="StartGame">
-            [ Start your adventure ]
-        </button>
+            <button class="btn-start" @onclick="StartGame">
+                [ Start your adventure ]
+            </button>
+        </div>
     </div>
 </div>
 
 @code {
     void StartGame() => Nav.NavigateTo("/play");
+
+    protected override void OnInitialized()
+    {
+        // Nollställ motorn när man kommer till menyn
+        Engine.ResetEngine();
+
+        // Om du även vill rensa historiken i statet:
+        State.ClearAll();
+    }
 }

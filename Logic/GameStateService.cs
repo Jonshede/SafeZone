@@ -6,21 +6,24 @@ namespace SafeZone.Logic
 {
     public class GameStateService
     {
-        // --- Aktiv speldata (det som ändras hela tiden) ---
+        // --- Aktiv speldata ---
         public string CurrentLevelName { get; set; } = "level1";
         public string CurrentNodeId { get; set; } = "intro";
 
-        // Now stores level + summary text so we can group by level
+        // Denna håller koll på bilden som visas just nu
+        public string ActiveBackground { get; set; } = "images/start-bg.jpg";
+
         public List<GameSummaryEntry> ChoiceHistory { get; private set; } = new();
 
-        // --- Checkpoint-data (det som sparats) ---
+        // --- Checkpoint-data ---
         private string _checkpointLevelName = "level1";
-        private string _checkpointNodeId = "Start";
+        private string _checkpointNodeId = "intro";
+        private string _checkpointBackground = "images/start-bg.jpg";
         private List<GameSummaryEntry> _checkpointHistory = new();
 
         public event Action? OnChange;
 
-        // Helper to add a summary entry tied to the current level
+        // Lägger till text i sammanfattningen
         public void AddChoiceSummary(string? summaryText)
         {
             if (string.IsNullOrEmpty(summaryText))
@@ -30,46 +33,40 @@ namespace SafeZone.Logic
             NotifyStateChanged();
         }
 
-        public void HandleChoice(GameChoice gameChoice)
-        {
-            AddChoiceSummary(gameChoice.SummaryText);
-            CurrentNodeId = gameChoice.NextNodeId;
-            NotifyStateChanged();
-        }
-
-        // Public helper to set the current node and notify subscribers
+        // Uppdaterar vilken nod vi är på
         public void SetCurrentNode(string nodeId)
         {
             CurrentNodeId = nodeId;
             NotifyStateChanged();
         }
 
-        // Kallar på denna när en nivå börjar eller vid en säker plats
         public void SaveCheckpoint()
         {
             _checkpointLevelName = CurrentLevelName;
             _checkpointNodeId = CurrentNodeId;
+            _checkpointBackground = ActiveBackground; // Sparar bilden!
             _checkpointHistory = new List<GameSummaryEntry>(ChoiceHistory);
             NotifyStateChanged();
         }
 
-        // Kallar på denna om spelaren dör eller när användaren återupptar från checkpoint
         public void ResetToCheckpoint()
         {
             CurrentLevelName = _checkpointLevelName;
             CurrentNodeId = _checkpointNodeId;
+            ActiveBackground = _checkpointBackground; // Återställer bilden!
             ChoiceHistory = new List<GameSummaryEntry>(_checkpointHistory);
             NotifyStateChanged();
         }
 
-        // Clears entire progress and history (use for restart)
         public void ClearAll()
         {
             CurrentLevelName = "level1";
             CurrentNodeId = "intro";
+            ActiveBackground = "images/start-bg.jpg";
             ChoiceHistory.Clear();
             _checkpointLevelName = "level1";
-            _checkpointNodeId = "Start";
+            _checkpointNodeId = "intro";
+            _checkpointBackground = "images/start-bg.jpg";
             _checkpointHistory.Clear();
             NotifyStateChanged();
         }
