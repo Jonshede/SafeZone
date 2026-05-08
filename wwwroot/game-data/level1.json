@@ -1,127 +1,239 @@
 {
   "LevelName": "The City",
   "StartNodeId": "intro",
-  "Scenarios": [
-    {
-      "Id": "intro",
-      "Text": "It's a last autumn afternoon and you are walking in the street, headed to a meeting.\nYou pass a quiet café and the light is soft on the wet pavement.\nIn the distance you see two airplanes, while at the same time there's a slight tremble in the ground. \nWhat's your next action?",
-      "IsCheckpoint": true,
-      "Choices": [
+    "Scenarios": [
         {
-          "ButtonText": "You stop at coffee-stand to buy an espresso",
-          "NextNodeId": "l1.1",
-          "SummaryText": "You choose to stop at the coffe-stand."
+            "Id": "intro",
+            "Text": "It's a last autumn afternoon and you are walking in the street, headed to a meeting.\nYou pass a quiet café and the light is soft on the wet pavement.\nIn the distance you see two airplanes, while at the same time there's a slight tremble in the ground. \nWhat's your next action?",
+            "IsCheckpoint": true,
+            "Choices": [
+                {
+                    "ButtonText": "You stop at coffee-stand to buy an espresso",
+                    "NextNodeId": "l1.1",
+                    "SummaryText": "You choose to stop at the coffe-stand."
+                },
+                {
+                    "ButtonText": "You take a seat on a bench",
+                    "NextNodeId": "l1.2",
+                    "SummaryText": "You sat on the bench, trying to find some news."
+                },
+                {
+                    "ButtonText": "You decide to stop and listen to a street musician",
+                    "NextNodeId": "l1.3",
+                    "SummaryText": "You decided to listen to the street musician."
+                }
+            ]
         },
         {
-          "ButtonText": "You take a seat on a bench",
-          "NextNodeId": "l1.2",
-          "SummaryText": "You sat on the bench, trying to find some news."
+            "Id": "l1.1",
+            "Text": "The barista tells you with an embarrased look that the cardreader have been malfunctioning a lot today. \nWhen you eventually get your coffee, you hear a sparkle from the carts radio. 'The government encourages...' before the sound is cut off",
+            "Choices": [
+                {
+                    "ButtonText": "Continue",
+                    "NextNodeId": "l1.4"
+                }
+            ]
         },
         {
-          "ButtonText": "You decide to stop and listen to a street musician",
-          "NextNodeId": "l1.3",
-          "SummaryText": "You decided to listen to the street musician."
-        }
-      ]
-    },
-    {
-      "Id": "l1.1",
-      "Text": "The barista tells you with an embarrased look that the cardreader have been malfunctioning a lot today. \nWhen you eventually get your coffee, you hear a sparkle from the carts radio. 'The government encourages...' before the sound is cut off",
-      "Choices": [
-        {
-          "ButtonText": "Continue",
-          "NextNodeId": "l1.4"
-        }
-      ]
-    },
-    {
-      "Id": "l1.2",
-      "Text": "You sit down on the bench, pulling out your phone. \nYou immediately try to get your newsapps working but they are buffering constantly. You look up with irritation and see that all the advertisement signs have stopped working.",
-      "Choices": [
-        {
-          "ButtonText": "You stop at coffee-stand to buy an espresso",
-          "NextNodeId": "l1.4"
-        }
-      ]
-    },
-    {
-      "Id": "l1.3",
-      "Text": "The musician plays a calm melody on his on his guitar, but stops abruptly as his microphone have stopped working. ",
-      "Choices": [
-        {
-          "ButtonText": "Continue",
-          "NextNodeId": "l1.4"
-        }
-      ]
-    },
-    {
-      "Id": "l1.4",
-      "Text": "The atmosphere on the streets shifts suddenly and an eerie silence covers the area as a blanket. \nChoose your next action to the sudden shift:",
-      "Choices": [
-        {
-          "ButtonText": "You stand still and try to call your close ones in in panic even though the mobile network is down",
-          "NextNodeId": "l1.5",
-          "SummaryText": "You tried to call your close ones."
+            "Id": "l1.2",
+            "Text": "You sit down on the bench, pulling out your phone. \nYou immediately try to get your newsapps working but they are buffering constantly. You look up with irritation and see that all the advertisement signs have stopped working.",
+            "Choices": [
+                {
+                    "ButtonText": "You stop at coffee-stand to buy an espresso",
+                    "NextNodeId": "l1.4"
+                }
+            ]
         },
         {
-          "ButtonText": "You run out to the town square so that you're able to get a clear view of the sky",
-          "NextNodeId": "l1.5",
-          "SummaryText": "You tried to get a clear view of the sky."
+            "Id": "l1.3",
+            "Text": "The musician plays a calm melody on his on his guitar, but stops abruptly as his microphone have stopped working. ",
+            "Choices": [
+                {
+                    "ButtonText": "Continue",
+                    "NextNodeId": "l1.4"
+                }
+            ]
         },
         {
-          "ButtonText": "You feel exposed in the street and move to the entrance to a closed store in order to get your bearings",
-          "NextNodeId": "l1.5",
-          "SummaryText": "You searched shelter at the entrance of a closed store."
-        }
-      ]
-    },
-    {
-      "Id": "l1.5",
-      "Text": "The air raid siren suddenly sets off and you can see bomber planes closing in on the city \nWhat's your next action?'",
-      "Choices": [
-        {
-          "ButtonText": "You follow your instincts and run with a larger mass of crowd towards the school area where you know there's a bunker.",
-          "NextNodeId": "l1.a1"
+            "Id": "l1.4",
+            "Text": "The atmosphere on the streets shifts suddenly and an eerie silence covers the area as a blanket. \nChoose your next action to the sudden shift:",
+            "Choices": [
+                {
+                    "ButtonText": "You stand still and try to call your close ones in in panic even though the mobile network is down",
+                    "NextNodeId": "l1.5",
+                    "SummaryText": "You tried to call your close ones."
+                },
+                {
+                    "ButtonText": "You run out to the town square so that you're able to get a clear view of the sky",
+                    "NextNodeId": "l1.5",
+                    "SummaryText": "You tried to get a clear view of the sky."
+                },
+                {
+                    "ButtonText": "You feel exposed in the street and move to the entrance to a closed store in order to get your bearings",
+                    "NextNodeId": "l1.5",
+                    "SummaryText": "You searched shelter at the entrance of a closed store."
+                }
+            ]
         },
         {
-          "ButtonText": "You hurry to the closest open staircase in search from shelter to the sudden chaos.",
-          "NextNodeId": "l1.b1"
+            "Id": "l1.5",
+            "Text": "The air raid siren suddenly sets off and you can see bomber planes closing in on the city \nWhat's your next action?'",
+            "Choices": [
+                {
+                    "ButtonText": "You follow your instincts and run with a larger mass of crowd towards the school area where you know there's a safety bunker for civilians.",
+                    "NextNodeId": "l1.a1"
+                },
+                {
+                    "ButtonText": "You hurry to the closest open staircase in search from shelter to the sudden chaos.",
+                    "NextNodeId": "l1.b1"
+                },
+                {
+                    "ButtonText": "You sneak into a dark alley in order to avoid crowds of people",
+                    "NextNodeId": "l1.c1"
+                }
+            ]
         },
         {
-          "ButtonText": "You sneak into a dark alley in order to avoid crowds of people",
-          "NextNodeId": "l1.c1"
-        }
-      ]
-    },
-    {
-      "Id": "l1.a1",
-      "Text": "You choose to follow your instincts and follow the herd. They moving in a frenzied pace, panic in the air. \nA shadow appears on the sky and a bomber plane approaches. It fires off a missile towards the crowd, and you hear your final thoughts rush in your head before the world explodes around you.",
-      "IsTerminal": true,
-      "Choices": [
-        {
-          "ButtonText": "You died",
-          "NextNodeId": "l1.5",
-          "SummaryText": "You choose to follow the herd. A critical mistake as it was a prime target for an enemy plane. \n<strong>You died.</strong>"
-        }
-      ]
-    },
-    {
-      "Id": "l1.end",
-      "Text": "The atmosphere on the streets shifts suddenly and an eerie silence covers the area as a blanket. \nChoose your next action to the sudden shift:",
-      "Choices": [
-        {
-          "ButtonText": "Go to the city (next level)",
-          "NextLevel": "level2",
-          "NextNodeId": "intro",
-          "SummaryText": "You left the first area for the city."
+            "Id": "l1.a1",
+            "Text": "You choose to follow your instincts and follow the herd. They moving in a frenzied pace, panic in the air. \nA shadow appears on the sky and a bomber plane approaches. It fires off a missile towards the crowd, and you hear your final thoughts rush in your head before the world explodes around you.",
+            "IsTerminal": true,
+            "Choices": [
+                {
+                    "ButtonText": "You died",
+                    "NextNodeId": "l1.5",
+                    "SummaryText": "You choose to follow the herd. A critical mistake as it was a prime target for an enemy plane. \n \n<strong>You died.</strong>"
+                }
+            ]
         },
         {
-          "ButtonText": "Go to the city (next level)",
-          "NextLevel": "level2",
-          "NextNodeId": "intro",
-          "SummaryText": "You left the first area for the city."
+            "Id": "l1.b1",
+            "Text": "The open staircase provides temporary shelter but you have to keep going. What's your choice?",
+            "Choices": [
+                {
+                    "ButtonText": "Go down the stairs and access the cellar",
+                    "NextNodeId": "l1.b2"
+                },
+                {
+                    "ButtonText": "You run up the stairs to the second level",
+                    "NextNodeId": "l1.b3"
+                }
+            ]
+        },
+
+        {
+            "Id": "l1.b2",
+            "Text": "The cellar is cloaked in darkness but you continue through it. A smell of gas creeps upon you",
+            "Choices": [
+                {
+                    "ButtonText": "You ignore the smell and start to run through the darkness",
+                    "NextNodeId": "l1.b2a1"
+                },
+                {
+                    "ButtonText": "You hold your breath and feel your way along the walls",
+                    "NextNodeId": "l1.b2b1"
+                }
+            ]
+        },
+        {
+            "Id": "l1.b2a1",
+            "Text": "The darkness reveals nothing and the gas starts to cloud your judgement. Sleepiness descends upon you while hallucinations starts to appear in front of you",
+            "Choices": [
+                {
+                    "ButtonText": "You cave to the sleepiness, suddenly the floor seems fairly comfortable. You lay down.",
+                    "NextNodeId": "l1.b2a1a1"
+                },
+                {
+                    "ButtonText": "A bright pink elephant wants to show you the exit. Follow it",
+                    "NextNodeId": "l1.b2a1b1"
+                }
+            ]
+        },
+        {
+            "Id": "l1.b2a1a1",
+            "Text": "You lay down on the floor, the gas making you sleepy. You contemplate your last thoughts as your last sleep begins.",
+            "IsTerminal": true,
+            "Choices": [
+                {
+                    "ButtonText": "You died.",
+                    "NextNodeId": "l1.b2a1a2"
+                }
+            ]
+        },
+        {
+            "Id": "l1.b2a1b1",
+            "Text": "The elephant seems to know what he's doing so you choose to follow him. Unfortunately he knows nothing and makes you go in loops in the cellar. The gas slowly makes you unconscious and you fall on the floor, authorities finding your body months later.",
+            "IsTerminal": true,
+            "Choices": [
+                {
+                    "ButtonText": "You died.",
+                    "NextNodeId": "l1.b2a1b2"
+                }
+            ]
+        },
+        {
+            "Id": "l1.b2b1",
+            "Text": "You identify that the gas might be dangerous and you try to hold your breath as much as you can. You traverse slowly through the pathway, a streak of orange-red light appearing at a distance. \nYou move closer and find the a door which you are able to open, bringing you outside. It's quickly apparent from where the orange-red colour came from, the buildings around you are burning.",
+            "Choices": [
+                {
+                    "ButtonText": "You stop and take in the scene, finding it hauntingly beautiful.",
+                    "NextNodeId": "l1.b2b1a1"
+                },
+                {
+                    "ButtonText": "Continue towards the school area.",
+                    "NextNodeId": "l1.b2b1b1"
+                }
+            ]
+        },
+        {
+            "Id": "l1.b2b1a1",
+            "Text": "As you watch the fires raging chaos among the buildings, you hear a sound above your head. You look up, seeing that the building you were inside is also on fire. A large chunk of bricks have collapsed and struck the top of your head, instantly killing you.",
+            "IsTerminal": true,
+            "Choices": [
+                {
+                    "ButtonText": "You died",
+                    "NextNodeId": "l1.5"
+                }
+            ]
+        },
+        {
+            "Id": "l1.b2b1b1",
+            "Text": "You choose not to linger, trying to find a safe path between the burning buildings. You carefully avoid narrow pathways and falling debris, moving closer to the school area.",
+            "Choices": [
+                {
+                    "ButtonText": "Continue",
+                    "NextNodeId": "l1.b2b1b2"
+                }
+            ]
+        },
+        {
+            "Id": "l1.b2b1b2",
+            "Text": "You reach the school area but you fall in despair as you see the area crowded, people scattered as to not be targets for bombers. \nAs you wait for your turn, a voice on the area speakers says 'The safety bunker is now full. We cannot grant more people access to it' \nYou groan loudly in frustration and panic, as does other people. You hear a couple talk about a safe haven at the harbors and you decide to hurry towards the next area. ",
+            "Choices": [
+                {
+                    "ButtonText": "Continue",
+                    "NextLevel": "level2",
+                    "NextNodeId": "intro"
+                }
+            ]
+        },
+
+        {
+            "Id": "l1.end",
+            "Text": "The atmosphere on the streets shifts suddenly and an eerie silence covers the area as a blanket. \nChoose your next action to the sudden shift:",
+            "Choices": [
+                {
+                    "ButtonText": "Go to the city (next level)",
+                    "NextLevel": "level2",
+                    "NextNodeId": "intro",
+                    "SummaryText": "You left the first area for the city."
+                },
+                {
+                    "ButtonText": "Go to the city (next level)",
+                    "NextLevel": "level2",
+                    "NextNodeId": "intro",
+                    "SummaryText": "You left the first area for the city."
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
