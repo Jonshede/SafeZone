@@ -4,10 +4,18 @@
 @inject GameEngine Engine
 @inject GameStateService State
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 @implements IDisposable
 
 <div class="game-wrapper">
-    @* BAKGRUND: Vi använder Engine för att hämta aktuell bild *@
+    @if (showGameOver)
+    {
+        <div class="game-over-overlay">
+            <h1 class="game-over-text">GAME OVER</h1>
+        </div>
+    }
+
+    @* BAKGRUND *@
     @if (Engine.CurrentScenario != null && !string.IsNullOrEmpty(Engine.CurrentScenario.ImagePath))
     {
         <img src="@Engine.CurrentScenario.ImagePath" class="image-bg" alt="Scene Background" />
@@ -19,22 +27,19 @@
 
     @if (Engine.IsLoading)
     {
-        @* LOADING SCREEN - Visas medan Engine jobbar *@
         <div class="start-content">
             <h1 class="title">INITIALIZING...</h1>
             <div class="divider"></div>
         </div>
     }
-    else if (Engine.CurrentScenario != null)
+    else if (Engine.CurrentScenario != null && !showGameOver)
     {
-        @* SPEL-INTERFACE - Nu med den centrala strukturen *@
         <div class="content-box">
-            @* Vi försöker hämta nivåns namn från Engine om det finns *@
             <h2 style="color: #ff4e00; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 2px;">
-                @(Engine.LoadedLevel?.LevelName ?? "INITIALIZING MISSION...")
+                @(Engine.LoadedLevel?.LevelName ?? "MISSION DATA")
             </h2>
             <div class="divider" style="width: 100px; margin: 0 auto 1.5rem auto;"></div>
-            
+        
             <p class="scenario-text">
                 @Engine.CurrentScenario.Text
             </p>
@@ -52,71 +57,61 @@
 </div>
 
 @code {
+    private bool showGameOver = false;
+
     protected override async Task OnInitializedAsync()
     {
-        // Prenumerera på ändringar
         State.OnChange += StateHasChanged;
-
-        try
+        if (Engine.CurrentScenario == null)
         {
-            // Vilken nivå ska vi ladda? Fråga State.
             var levelToLoad = string.IsNullOrEmpty(State.CurrentLevelName) ? "level1" : State.CurrentLevelName;
-            
-            // Använd motorn för att sköta laddningen (renare!)
             await Engine.LoadLevel(levelToLoad);
-
-            // Om vi har ett sparat ID i statet, se till att motorn synkar dit
-            if (!string.IsNullOrEmpty(State.CurrentNodeId))
-            {
-                // Om din Engine har en metod för att sätta scenariot direkt, annars sköter LoadLevel det.
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during initialization: {ex.Message}");
         }
     }
 
     private async Task OnChoiceSelected(GameChoice choice)
     {
-        // If the currently displayed scenario is terminal, handle the terminal choice press:
-        // show the terminal text + button first (already rendered), and when the user clicks that button
-        // record any summary and navigate to the full summary page.
-        if (Engine.CurrentScenario?.IsTerminal == true)
+        // --- FALL A: Avslutningsfasen ---
+        if (Engine.CurrentScenario?.IsDead == true)
         {
-            if (!string.IsNullOrEmpty(choice.SummaryText))
-                State.AddChoiceSummary(choice.SummaryText);
-
-            // Force showing the full history on the summary page
-            Nav.NavigateTo("/summary?showAll=1");
+            Nav.NavigateTo("/summary?isDead=true");
             return;
         }
 
-        // 1. Kolla om valet leder till en NY NIVÅ (Level Transition)
+        // --- FALL B: Själva händelsen ---
+        await Engine.SelectChoice(choice);
+
+        if (Engine.CurrentScenario?.IsDead == true)
+        {
+            // 1. Starta ljudet direkt när vi märker att spelaren dött
+            try 
+            {
+                await JS.InvokeVoidAsync("playAudio", "gameOverSound");
+            }
+            catch { /* Ignorera om JS inte är redo */ }
+
+            // 2. Kör animationen
+            showGameOver = true;
+            StateHasChanged();
+
+            await Task.Delay(4000); 
+
+            showGameOver = false; 
+            StateHasChanged();
+            return; 
+        }
+
+        // --- FALL C: Vanligt spel ---
         if (!string.IsNullOrEmpty(choice.NextLevel))
         {
-            if (!string.IsNullOrEmpty(choice.SummaryText))
-                State.AddChoiceSummary(choice.SummaryText); // <--- minimal change
-
             var qNextLevel = Uri.EscapeDataString(choice.NextLevel);
             var qNextNode = Uri.EscapeDataString(choice.NextNodeId ?? string.Empty);
-            
-            // Skicka spelaren till sammanfattningen innan nästa nivå börjar
             Nav.NavigateTo($"/summary?nextLevel={qNextLevel}&nextNode={qNextNode}");
             return;
         }
-
-        // 2. Hantera vanliga val inom samma nivå via motorn
-        await Engine.SelectChoice(choice);
-
-        // NOTE: removed immediate navigation when the new scenario is terminal.
-        // This allows the terminal scenario (its text + button) to be shown.
-        // The summary will be shown when the player clicks the terminal scenario's button,
-        // which is handled by the top-of-method terminal check above.
     }
 
-    public void Dispose()
-    {
-        State.OnChange -= StateHasChanged;
-    }
+    // Ta bort den gamla TriggerGameOver() metoden helt för att undvika förvirring!
+
+    public void Dispose() => State.OnChange -= StateHasChanged;
 }
