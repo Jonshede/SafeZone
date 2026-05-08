@@ -1,92 +1,117 @@
 {
   "LevelName": "The City",
   "StartNodeId": "intro",
-  "Scenarios": [
-    {
-      "Id": "intro",
-      "Text": "It's a last autumn afternoon and you are walking in the street, headed to a meeting.\nYou pass a quiet café and the light is soft on the wet pavement.\nIn the distance you see two airplanes, while at the same time there's a slight tremble in the ground. \nWhat's your next action?",
-      "IsCheckpoint": true,
-      "Choices": [
+    "Scenarios": [
         {
-          "ButtonText": "You stop at coffee-stand to buy an espresso",
-          "NextNodeId": "l1.1",
-          "SummaryText": "You choose to stop at the coffe-stand."
+            "Id": "intro",
+            "Text": "It's a last autumn afternoon and you are walking in the street, headed to a meeting.\nYou pass a quiet café and the light is soft on the wet pavement.\nIn the distance you see two airplanes, while at the same time there's a slight tremble in the ground. \nWhat's your next action?",
+            "IsCheckpoint": true,
+            "Choices": [
+                {
+                    "ButtonText": "You stop at coffee-stand to buy an espresso",
+                    "NextNodeId": "l1.1",
+                    "SummaryText": "You choose to stop at the coffe-stand."
+                },
+                {
+                    "ButtonText": "You take a seat on a bench",
+                    "NextNodeId": "l1.2",
+                    "SummaryText": "You sat on the bench, trying to find some news."
+                },
+                {
+                    "ButtonText": "You decide to stop and listen to a street musician",
+                    "NextNodeId": "l1.3",
+                    "SummaryText": "You decided to listen to the street musician."
+                }
+            ]
         },
         {
-          "ButtonText": "You take a seat on a bench",
-          "NextNodeId": "l1.2",
-          "SummaryText": "You sat on the bench, trying to find some news."
+            "Id": "l1.1",
+            "Text": "The barista tells you with an embarrased look that the cardreader have been malfunctioning a lot today. \nWhen you eventually get your coffee, you hear a sparkle from the carts radio. 'The government encourages...' before the sound is cut off",
+            "Choices": [
+                {
+                    "ButtonText": "Continue",
+                    "NextNodeId": "l1.4"
+                }
+            ]
         },
         {
-          "ButtonText": "You decide to stop and listen to a street musician",
-          "NextNodeId": "l1.3",
-          "SummaryText": "You decided to listen to the street musician."
-        }
-      ]
-    },
-    {
-      "Id": "l1.1",
-      "Text": "The barista tells you with an embarrased look that the cardreader have been malfunctioning a lot today. \nWhen you eventually get your coffee, you hear a sparkle from the carts radio. 'The government encourages...' before the sound is cut off",
-      "Choices": [
-        {
-          "ButtonText": "Continue",
-          "NextNodeId": "l1.4"
-        }
-      ]
-    },
-    {
-      "Id": "l1.2",
-      "Text": "You sit down on the bench, pulling out your phone. \nYou immediately try to get your newsapps working but they are buffering constantly. You look up with irritation and see that all the advertisement signs have stopped working.",
-      "Choices": [
-        {
-          "ButtonText": "You stop at coffee-stand to buy an espresso",
-          "NextNodeId": "l1.4"
-        }
-      ]
-    },
-    {
-      "Id": "l1.3",
-      "Text": "The musician plays a calm melody on his on his guitar, but stops abruptly as his microphone have stopped working. ",
-      "Choices": [
-        {
-          "ButtonText": "Continue",
-          "NextNodeId": "l1.4"
-        }
-      ]
-    },
-    {
-      "Id": "l1.4",
-      "Text": "The atmosphere on the streets shifts suddenly and an eerie silence covers the area as a blanket. \nChoose your next action to the sudden shift:",
-      "Choices": [
-        {
-          "ButtonText": "You stand still and try to call your close ones in in panic even though the mobile network is down",
-          "NextNodeId": "l1.5",
-          "SummaryText": "You tried to call your close ones."
+            "Id": "l1.2",
+            "Text": "You sit down on the bench, pulling out your phone. \nYou immediately try to get your newsapps working but they are buffering constantly. You look up with irritation and see that all the advertisement signs have stopped working.",
+            "Choices": [
+                {
+                    "ButtonText": "You stop at coffee-stand to buy an espresso",
+                    "NextNodeId": "l1.4"
+                }
+            ]
         },
         {
-          "ButtonText": "You run out to the town square so that you're able to get a clear view of the sky",
-          "NextNodeId": "l1.5",
-          "SummaryText": "You tried to get a clear view of the sky."
+            "Id": "l1.3",
+            "Text": "The musician plays a calm melody on his on his guitar, but stops abruptly as his microphone have stopped working. ",
+            "Choices": [
+                {
+                    "ButtonText": "Continue",
+                    "NextNodeId": "l1.4"
+                }
+            ]
         },
         {
-          "ButtonText": "You feel exposed in the street and move to the entrance to a closed store in order to get your bearings",
-          "NextNodeId": "l1.5",
-          "SummaryText": "You searched shelter at the entrance of a closed store."
-        }
-      ]
-    },
-    {
-      "Id": "l1.5",
-      "Text": "The air raid siren suddenly sets off and you can see bomber planes closing in on the city \nWhat's your next action?'",
-      "Choices": [
+            "Id": "l1.4",
+            "Text": "The atmosphere on the streets shifts suddenly and an eerie silence covers the area as a blanket. \nChoose your next action to the sudden shift:",
+            "Choices": [
+                {
+                    "ButtonText": "You stand still and try to call your close ones in in panic even though the mobile network is down",
+                    "NextNodeId": "l1.5",
+                    "SummaryText": "You tried to call your close ones."
+                },
+                {
+                    "ButtonText": "You run out to the town square so that you're able to get a clear view of the sky",
+                    "NextNodeId": "l1.5",
+                    "SummaryText": "You tried to get a clear view of the sky."
+                },
+                {
+                    "ButtonText": "You feel exposed in the street and move to the entrance to a closed store in order to get your bearings",
+                    "NextNodeId": "l1.5",
+                    "SummaryText": "You searched shelter at the entrance of a closed store."
+                }
+            ]
+        },
+        {
+            "Id": "l1.5",
+            "Text": "The air raid siren suddenly sets off and you can see bomber planes closing in on the city \nWhat's your next action?'",
+            "Choices": [
+                {
+                    "ButtonText": "You follow your instincts and run with a larger mass of crowd towards the school area where you know there's a safety bunker for civilians.",
+                    "NextNodeId": "l1.a1"
+                },
+                {
+                    "ButtonText": "You hurry to the closest open staircase in search from shelter to the sudden chaos.",
+                    "NextNodeId": "l1.b1"
+                },
+                {
+                    "ButtonText": "You sneak into a dark alley in order to avoid crowds of people",
+                    "NextNodeId": "l1.c1"
+                }
+            ]
+        },
         {
           "ButtonText": "You follow your instincts and run with a larger mass of crowd towards the school area where you know there's a safety bunker for civilians.",
           "NextNodeId": "l1.a1"
         },
         {
-          "ButtonText": "You hurry to the closest open staircase in search from shelter to the sudden chaos.",
-          "NextNodeId": "l1.b1"
+            "Id": "l1.b1",
+            "Text": "The open staircase provides temporary shelter but you have to keep going. What's your choice?",
+            "Choices": [
+                {
+                    "ButtonText": "Go down the stairs and access the cellar",
+                    "NextNodeId": "l1.b2"
+                },
+                {
+                    "ButtonText": "You run up the stairs to the second level",
+                    "NextNodeId": "l1.b3"
+                }
+            ]
         },
+
         {
           "ButtonText": "You sneak into a dark alley in order to avoid crowds of people",
           "NextNodeId": "l1.c1"
@@ -237,7 +262,5 @@
           "NextNodeId": "intro",
           "SummaryText": "You left the first area for the city."
         }
-      ]
-    }
-  ]
+    ]
 }
