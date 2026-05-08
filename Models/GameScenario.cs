@@ -9,5 +9,6 @@
         public bool IsCheckpoint { get; set; }
         // New: mark scenarios that end the level / should jump to summary
         public bool IsTerminal { get; set; }
+        public bool IsDead { get; set; }
     }
 }

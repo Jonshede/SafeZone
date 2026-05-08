@@ -97,10 +97,11 @@
       "Id": "l1.a1",
       "Text": "You choose to follow your instincts and follow the herd. They moving in a frenzied pace, panic in the air. \nA shadow appears on the sky and a bomber plane approaches. It fires off a missile towards the crowd, and you hear your final thoughts rush in your head before the world explodes around you.",
       "IsTerminal": true,
+      "IsDead": true,
       "Choices": [
         {
           "ButtonText": "You died",
-          "NextNodeId": "l1.5",
+          "NextNodeId": "intro",
           "SummaryText": "You choose to follow the herd. A critical mistake as it was a prime target for an enemy plane. \n<strong>You died.</strong>"
         }
       ]
